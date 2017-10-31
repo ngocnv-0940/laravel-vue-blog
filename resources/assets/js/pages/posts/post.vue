@@ -7,13 +7,10 @@
     </figure>
     <div class="media-content">
       <div class="content">
-        <p>
-          <router-link :to="{ name: 'post.single', params: { slug: post.slug }}"
-            class="subtitle has-text-dark">
-            {{ post.title }}
+          <router-link :to="{ name: 'post.single', params: { slug: post.slug }}">
+            <h2 class=" is-size-5 has-text-dark">{{ post.title }}</h2>
           </router-link>
-          <br>
-          {{ post.excerpt }}
+          <p class="has-text-justified">{{ post.excerpt }}</p>
           <b-taglist style="margin-top: 0.5em">
             <b-tag rounded v-for="tag in post.tags" :key="tag.id">
               <router-link :to="{ name: 'tag.show', params: { slug: tag.slug }}">
@@ -21,7 +18,6 @@
               </router-link>
             </b-tag>
           </b-taglist>
-        </p>
       </div>
       <nav class="level is-mobile">
         <div class="level-left">
