@@ -5,8 +5,8 @@
         <h1 class="title is-spaced">{{ post.title }}</h1>
         <p class="content">{{ post.excerpt }}</p>
         <nav class="level">
-          <div class="level-left">
-            <router-link v-if="post.category.slug" :to="{ name: 'post.category', params: { slug: post.category.slug }}" class="level-item">
+          <div class="level-left" v-if="post.slug">
+            <router-link :to="{ name: 'post.category', params: { slug: post.category.slug }}" class="level-item">
               <span class="icon icon-small"><i class="fa fa-folder"></i></span>
               <small>{{ post.category.name }}</small>
             </router-link>

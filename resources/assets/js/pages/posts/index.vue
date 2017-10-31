@@ -13,21 +13,15 @@
       </div>
       <div class="column">
         <section class="right-sidebar">
-          <h2 class="subtitle">Tags</h2>
+          <h2 class="subtitle">Popular tags</h2>
           <b-field grouped group-multiline>
-            <div class="control" v-for="i in 3" :key="i">
-              <a>
+            <div class="control" v-for="tag in tags" :key="tag.slug">
+              <router-link :to="{ name: 'tag.show', params: { slug: tag.slug }}">
                 <b-taglist attached>
-                  <b-tag type="is-primary">npm</b-tag>
-                  <b-tag type="is-secondary">12</b-tag>
+                  <b-tag type="is-primary">{{ tag.name }}</b-tag>
+                  <b-tag type="is-secondary">{{ tag.posts_count }}</b-tag>
                 </b-taglist>
-              </a>
-            </div>
-            <div class="control" v-for="i of 4" :key="i">
-              <b-taglist attached>
-                <b-tag type="is-primary">laravel</b-tag>
-                <b-tag type="is-secondary">55</b-tag>
-              </b-taglist>
+              </router-link>
             </div>
           </b-field>
         </section>
@@ -52,6 +46,7 @@ export default {
   data() {
     return {
       posts: [],
+      tags: [],
       page: +this.$route.params.page || 1,
       loading: false,
       total: 0
@@ -59,11 +54,12 @@ export default {
   },
   created() {
     this.getPosts()
+    this.getTags()
   },
   methods: {
     async getPosts() {
       const loading = this.$loading.open()
-      let { data } = await axios.get('post', {
+      let { data } = await axios.get(route('post.index'), {
         params: {
           ...this.params,
           page: this.page
@@ -79,6 +75,10 @@ export default {
         })
       }
       loading.close()
+    },
+    async getTags() {
+      let { data: { data: tags }} = await axios.get(route('tag.index'))
+      this.tags = tags
     },
     changePage(page) {
       if (page == 1)
