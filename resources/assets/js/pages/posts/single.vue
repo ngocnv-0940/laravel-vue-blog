@@ -110,6 +110,15 @@ import axios from 'axios'
 import Comment from './Comment'
 import { mapGetters, mapActions, mapState } from 'vuex'
 export default {
+  metaInfo() {
+    return {
+      title: this.post.title || 'Đang tải',
+      meta: [
+        { name: 'keywords', content: this.post.meta_keywords },
+        { name: 'description', content: this.post.meta_description }
+      ]
+    }
+  },
   created() {
     this.fetchArticle('post.show')
     this.fetchComments({ refresh: true })

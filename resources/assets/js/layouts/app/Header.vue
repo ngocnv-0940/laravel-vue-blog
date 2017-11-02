@@ -29,10 +29,20 @@
                 <div class="navbar-end">
                     <div class="navbar-item">
                       <b-field>
-                          <b-input placeholder="Search..."
+                          <b-input placeholder="Tìm kiếm..."
                               type="search"
                               icon="search">
                           </b-input>
+                      </b-field>
+                    </div>
+                    <div class="navbar-item" v-if="authenticated">
+                      <b-field>
+                        <router-link :to="{ name: 'post.create' }" class="button is-primary is-outlined">
+                          <span class="icon">
+                            <b-icon icon="create"></b-icon>
+                          </span>
+                          <span>Đăng bài</span>
+                        </router-link>
                       </b-field>
                     </div>
                     <div class="navbar-item" v-if="!authenticated">
@@ -45,9 +55,9 @@
                     <div class="navbar-item has-dropdown is-hoverable" v-else>
                         <router-link to="/" exact class="navbar-link">Chào {{ user.name }}!</router-link>
                         <div class="navbar-dropdown is-boxed">
-                            <a class="navbar-item" @click.prevent="logout">Log out</a>
+                            <a class="navbar-item" @click.prevent="logout">Đăng xuất</a>
                             <hr class="navbar-divider">
-                            <strong class="navbar-item has-text-grey">v1.0.0</strong>
+                            <strong class="navbar-item has-text-grey">NgocBlog v1.0.0</strong>
                         </div>
                     </div>
                     <b-modal :active.sync="showLogin" has-modal-card>

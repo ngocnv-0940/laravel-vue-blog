@@ -24,6 +24,7 @@ class CreatePostsTable extends Migration
             $table->text('meta_keywords')->nullable();
             $table->text('content');
             $table->string('image')->nullable();
+            $table->boolean('is_public')->default(true);
             // $table->enum('status', ['PUBLISHED', 'DRAFT', 'PENDING'])->default('DRAFT');
             $table->boolean('featured')->default(0);
             $table->integer('comments_count')->default(0);

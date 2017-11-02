@@ -2,13 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
-use App\Models\Category;
 use App\Http\Resources\PostResource;
+use App\Models\Category;
+use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    private $post;
+
+    public function __construct(Post $post)
+    {
+        $this->post = $post;
+    }
+
     // private $dataSelect = [
     //     'id', 'user_id', 'category_id', 'title', 'slug', 'excerpt', 'image', 'created_at'
     // ];
@@ -53,7 +61,37 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (auth()->check()) {
+            // return $request->all();
+            $data = $request->validate([
+                'title' => 'required|unique:posts,title|max:255',
+                'category_id' => 'required|integer|exists:categories,id',
+                'content' => 'required|string',
+                'excerpt' => 'string|max:255',
+                'tags' => 'array|nullable',
+                'is_public' => 'boolean',
+                'meta_keywords' => 'string|nullable'
+            ]);
+            $data['title'] = trim($data['title']);
+            $data['content'] = trim($data['content']);
+            $data['meta_description'] = $data['excerpt'];
+            $data['slug'] = str_slug($data['title']);
+            $data['user_id'] = auth()->id();
+            $newPost = $this->post->create(array_except($data, 'tags'));
+            $tagIds = [];
+            foreach ($data['tags'] as $tag) {
+                $tag = trim($tag);
+                if ($tag == '') {
+                    continue;
+                }
+                $aTag = Tag::firstOrCreate(['name' => $tag], ['slug' => str_slug($tag)]);
+                $tagIds[] = $aTag->id;
+            }
+            $newPost->tags()->sync($tagIds);
+            return $newPost;
+        }
+
+        abort(500, 'Please login to do this action');
     }
 
     /**

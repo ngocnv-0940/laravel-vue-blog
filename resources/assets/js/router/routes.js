@@ -1,5 +1,7 @@
 const CategoryNav = () => import('~/pages/categories/CategoryNav.vue')
 const PostIndex = () => import('~/pages/posts/index.vue')
+const PostShow = () => import('~/pages/posts/single.vue')
+const PostCreate = () => import('~/pages/posts/create.vue')
 const CategoryShow = () => import('~/pages/categories/show.vue')
 const TagShow = () => import('~/pages/posts/Tag.vue')
 const UserShow = () => import('~/pages/users/show.vue')
@@ -27,7 +29,7 @@ export default ({ authGuard, guestGuard }) => [
     path: '/post/:page(\\d+)?', name: 'post.list', component: PostIndex,
     meta: { scrollToTop: true }
   },
-  { path: '/post/:slug', name: 'post.single', component: require('~/pages/posts/single.vue'),
+  { path: '/post/:slug', name: 'post.show', component: PostShow,
     meta: { scrollToTop: true }
   },
 
@@ -38,7 +40,8 @@ export default ({ authGuard, guestGuard }) => [
       { path: '', redirect: { name: 'settings.profile' }},
       { path: 'profile', name: 'settings.profile', component: require('~/pages/settings/profile.vue') },
       { path: 'password', name: 'settings.password', component: require('~/pages/settings/password.vue') }
-    ] }
+    ] },
+    { path: '/create/post', name: 'post.create', component: PostCreate }
   ]),
 
   // Guest routes.
