@@ -99,7 +99,10 @@ class PostController extends Controller
     public function show($postSlug)
     {
         $post = Post::withDraft()->whereSlug($postSlug)->firstOrFail();
-        return new PostResource($post->load(['author', 'category', 'tags', 'likes']));
+        if ($post->is_public || auth()->id() === $post->user_id) {
+            return new PostResource($post->load(['author', 'category', 'tags', 'likes']));
+        }
+        abort(403);
     }
 
     /**

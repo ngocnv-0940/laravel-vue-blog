@@ -54,6 +54,12 @@
 import axios from 'axios'
 import Post from '../posts/post'
 export default {
+  props: {
+    params: {
+      type: Object,
+      required: false
+    }
+  },
   metaInfo () {
     return { title: 'User' }
   },
@@ -72,7 +78,11 @@ export default {
     async getPosts() {
       const loading = this.$loading.open()
       try {
-        let params = { page: this.page, user: this.$route.params.username }
+        let params = {
+          page: this.page,
+          user: this.$route.params.username,
+          ...this.params
+        }
         let { data } = await axios.get(route('user.show', params))
 
         if (data.posts.current_page <= data.posts.last_page) {

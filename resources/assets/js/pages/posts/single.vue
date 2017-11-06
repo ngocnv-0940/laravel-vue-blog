@@ -3,7 +3,7 @@
     <div class="columns">
       <div class="is-three-quarters column">
         <h1 class="title is-spaced">
-          <button class="button is-danger is-outlined" v-if="!post.is_public">Bản nháp</button>
+          <button class="button is-danger is-outlined" v-if="post.is_public === false">Bản nháp</button>
           {{ post.title }}
         </h1>
         <p class="content">{{ post.excerpt }}</p>

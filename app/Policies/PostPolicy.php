@@ -19,7 +19,7 @@ class PostPolicy
      */
     public function view(User $user, Post $post)
     {
-        return $post->is_public == true ?? $post->user_id === $user->id;
+        //
     }
 
     /**

@@ -16,7 +16,7 @@ export default ({ authGuard, guestGuard }) => [
   },
   {
     path: '/user/:username/drafts/:page(\\d+)?', name: 'user.drafts', component: UserShow,
-    props: {  }
+    props: { params: { scope: 'drafts' }}
   },
   {
     path: '/user/:username/:page(\\d+)?', name: 'user.show', component: UserShow
