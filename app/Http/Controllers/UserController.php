@@ -45,7 +45,7 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(User $user, Request $request)
     {
         $posts = $user->posts()->with(['author', 'category', 'tags'])->latest()->paginate();
 

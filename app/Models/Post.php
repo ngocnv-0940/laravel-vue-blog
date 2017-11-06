@@ -2,29 +2,17 @@
 
 namespace App\Models;
 
-use App\Scopes\StatusScope;
+use App\Traits\Draft;
 use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    use Likeable;
+    use Likeable, Draft;
 
     const DEFAULT_IMAGE = 'https://bulma.io/images/placeholders/640x480.png';
 
     protected $guarded = [];
-
-    /**
-     * The "booting" method of the model.
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope(new StatusScope);
-    }
 
     /**
      * Get the route key for the model.

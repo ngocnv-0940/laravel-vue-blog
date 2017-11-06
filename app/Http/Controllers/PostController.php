@@ -62,7 +62,6 @@ class PostController extends Controller
     public function store(Request $request)
     {
         if (auth()->check()) {
-            // return $request->all();
             $data = $request->validate([
                 'title' => 'required|unique:posts,title|max:255',
                 'category_id' => 'required|integer|exists:categories,id',
@@ -72,8 +71,6 @@ class PostController extends Controller
                 'is_public' => 'boolean',
                 'meta_keywords' => 'string|nullable'
             ]);
-            $data['title'] = trim($data['title']);
-            $data['content'] = trim($data['content']);
             $data['meta_description'] = $data['excerpt'];
             $data['slug'] = str_slug($data['title']);
             $data['user_id'] = auth()->id();
@@ -96,12 +93,12 @@ class PostController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
+     * @param  String $postSlug
+     * @return \App\Http\Resources\PostResource
      */
-    public function show(Post $post)
+    public function show($postSlug)
     {
+        $post = Post::withDraft()->whereSlug($postSlug)->firstOrFail();
         return new PostResource($post->load(['author', 'category', 'tags', 'likes']));
     }
 

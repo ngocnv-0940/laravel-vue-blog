@@ -20,8 +20,11 @@ class TagController extends Controller
             $join->on('t.tag_id', '=', 'tags.id')
                 ->where('t.taggable_type', '=', Post::class);
         })
-        ->join('posts as p', 'p.id', '=', 't.taggable_id')
-        ->select('tags.*', \DB::raw('count(p.id) as posts_count'))
+        ->join('posts', function ($join) {
+            $join->on('posts.id', '=', 't.taggable_id')
+                ->where('posts.is_public', '=', 1);
+        })
+        ->select('tags.*', \DB::raw('count(posts.id) as posts_count'))
         ->groupBy('tags.id')
         ->orderBy('posts_count', 'desc')
         ->take(10)

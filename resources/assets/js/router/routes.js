@@ -15,6 +15,10 @@ export default ({ authGuard, guestGuard }) => [
     meta: { category: CategoryNav }
   },
   {
+    path: '/user/:username/drafts/:page(\\d+)?', name: 'user.drafts', component: UserShow,
+    props: {  }
+  },
+  {
     path: '/user/:username/:page(\\d+)?', name: 'user.show', component: UserShow
   },
   {
