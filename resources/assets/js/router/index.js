@@ -33,8 +33,6 @@ function make (routes) {
 
   // Register before guard.
   router.beforeEach(async (to, from, next) => {
-    // const [ component ] = router.getMatchedComponents({...to})
-    // console.log(router.app.layout)
     if (!store.getters.authCheck && store.getters.authToken) {
       try {
         await store.dispatch('fetchUser')

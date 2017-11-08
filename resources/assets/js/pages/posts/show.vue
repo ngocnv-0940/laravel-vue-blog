@@ -112,6 +112,7 @@
 import axios from 'axios'
 import Comment from './Comment'
 import { mapGetters, mapActions, mapState } from 'vuex'
+const Nav = () => import('./PostNav.vue')
 export default {
   metaInfo() {
     return {
@@ -125,6 +126,7 @@ export default {
   created() {
     this.fetchArticle('post.show')
     this.fetchComments({ refresh: true })
+    this.$store.state.header.tab = Nav
   },
   computed: {
     ...mapGetters(['authUser', 'authCheck']),

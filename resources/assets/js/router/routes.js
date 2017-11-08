@@ -1,6 +1,6 @@
 const CategoryNav = () => import('~/pages/categories/CategoryNav.vue')
 const PostIndex = () => import('~/pages/posts/index.vue')
-const PostShow = () => import('~/pages/posts/single.vue')
+const PostShow = () => import('~/pages/posts/show.vue')
 const PostCreate = () => import('~/pages/posts/create.vue')
 const CategoryShow = () => import('~/pages/categories/show.vue')
 const TagShow = () => import('~/pages/posts/Tag.vue')

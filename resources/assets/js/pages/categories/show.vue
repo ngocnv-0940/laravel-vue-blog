@@ -24,6 +24,7 @@
 <script>
 import axios from 'axios'
 import Post from '../posts/post'
+const Category = () => import('~/pages/categories/CategoryNav.vue')
 export default {
   metaInfo () {
     return { title: 'Category' }
@@ -38,6 +39,7 @@ export default {
   },
   created() {
     this.getPosts()
+    this.$store.state.header.tab = Category
   },
   methods: {
     async getPosts() {

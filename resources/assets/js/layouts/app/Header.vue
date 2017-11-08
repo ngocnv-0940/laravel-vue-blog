@@ -29,14 +29,14 @@
         <div class="navbar-start">
           <router-link :to="{ name: 'post.list' }" class="navbar-item">Tin tức</router-link>
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link" href="">
+            <a class="navbar-link" href="#">
               Docs
             </a>
             <div class="navbar-dropdown is-boxed">
-              <a class="navbar-item" href="">
+              <a class="navbar-item" href="#">
                 Overview
               </a>
-              <a class="navbar-item" href="">
+              <a class="navbar-item" href="#">
                 Modifiers
               </a>
               <hr class="navbar-divider">
@@ -45,6 +45,56 @@
               </a>
             </div>
           </div>
+
+          <div class="navbar-item has-dropdown is-hoverable is-mega">
+            <div class="navbar-link" :class="{ 'is-active': $route.name == 'post.category' }">
+              Chuyên mục
+            </div>
+            <div id="blogDropdown" class="navbar-dropdown" data-style="width: 18rem;">
+              <div class="container is-fluid">
+                <div class="columns">
+                  <div class="column" v-for="category in categories" :key="category.slug">
+                    <h1 class="title is-6 is-mega-menu-title">{{ category.name }}</h1>
+                    <router-link :to="{ name: 'post.category', params: { slug: child.slug }}"
+                      v-for="child in category.childs"
+                      :key="child.slug"
+                      class="navbar-item">
+                      <div class="navbar-content">
+                        <p>{{ child.name }}</p>
+                        <p>
+                          <small class="has-text-info">03 posts</small>
+                        </p>
+                      </div>
+                    </router-link>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="navbar-divider">
+              <div class="navbar-item">
+                <div class="navbar-content">
+                  <div class="level is-mobile">
+                    <div class="level-left">
+                      <div class="level-item">
+                        <strong>Stay up to date!</strong>
+                      </div>
+                    </div>
+                    <div class="level-right">
+                      <div class="level-item">
+                        <a class="button bd-is-rss is-small" href="http://bulma.io/atom.xml">
+                          <span class="icon is-small">
+                            <i class="fa fa-rss"></i>
+                          </span>
+                          <span>Subscribe</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
         <div class="navbar-end">
           <div class="navbar-item">
@@ -90,8 +140,8 @@
 <div class="hero is-primary">
   <div class="hero-body">
     <div class="container">
-      <h1 class="title">Lorem ipsum dolor sit amet.</h1>
-      <h2 class="subtitle">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum, ut.</h2>
+      <h1 class="title">{{ header.title }}</h1>
+      <h2 class="subtitle">{{ header.subtitle }}</h2>
     </div>
   </div>
   <div class="hero-foot">
@@ -99,21 +149,25 @@
       <nav class="tabs is-boxed">
         <ul>
           <li v-for="tab in tabs"
-          :key="tab.title"
-          :class="{ 'is-active': currentTab === tab.component }">
-          <a @click="changeTab(tab)">
-            {{ tab.title }}
-          </a>
-        </li>
+            :key="tab.title"
+            :class="{ 'is-active': currentTab === tab.component }">
+              <a @click="changeTab(tab)">
+                {{ tab.title }}
+              </a>
+          </li>
+<!--           <li class="is-active">
+            <a>{{ header.tabName }}</a>
+          </li> -->
       </ul>
-    </nav>
+      </nav>
+    </div>
   </div>
-</div>
 </div>
 <nav class="navbar has-shadow">
   <div class="container">
     <keep-alive>
-      <component :is="currentTab"></component>
+      <!-- <component :is="currentTab"></component> -->
+      <component :is="header.tab"></component>
     </keep-alive>
   </div>
 </nav>
@@ -121,7 +175,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import axios from 'axios'
+import { mapGetters, mapState } from 'vuex'
 import tabs from './tabs.js'
 import Post from '../../pages/posts/PostNav'
 import LoginForm from '~/pages/auth/LoginForm'
@@ -136,13 +191,17 @@ export default {
     tabs,
     appName: window.config.appName,
     isMenuActive: false,
-    showLogin: false
+    showLogin: false,
+    categories: []
   }),
 
-  computed: mapGetters({
-    user: 'authUser',
-    authenticated: 'authCheck'
-  }),
+  computed: {
+    ...mapGetters({
+      user: 'authUser',
+      authenticated: 'authCheck'
+    }),
+    ...mapState(['header'])
+  },
 
   methods: {
     async logout () {
@@ -165,7 +224,14 @@ export default {
     changeTab(tab) {
       this.currentTab = tab.component
       this.$router.push({ name: tab.route, params: tab.params || {}})
-    }
+    },
+    async getCategory() {
+      const { data } = await axios.get(route('category.index'))
+      this.categories = data.data
+    },
+  },
+  created() {
+    this.getCategory()
   },
   beforeRouteUpdate(to, from, next) {
     console.log(123)
