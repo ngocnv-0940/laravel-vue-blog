@@ -36,7 +36,7 @@ class CommentController extends Controller
         ]);
 
         $model = self::MODEL_PATH . studly_case(array_get($data, 'type', 'Post'));
-        $modelInstance = app($model)->whereSlug($data['slug'])->firstOrFail();
+        $modelInstance = app($model)->withDraft()->whereSlug($data['slug'])->firstOrFail();
 
         return CommentResource::collection($modelInstance
             ->comments()

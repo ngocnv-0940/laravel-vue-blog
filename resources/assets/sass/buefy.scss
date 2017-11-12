@@ -1,6 +1,6 @@
 @import "~bulma/sass/utilities/_all";
 @import "~buefy/src/scss/utils/_theme-variables";
-$gap: 160px;
+$gap: 120px;
 // Colors
 $twitter: #4099FF;
 $twitter-invert: findColorInvert($twitter);
@@ -8,7 +8,7 @@ $facebook: #4267B2;
 $facebook-invert: findColorInvert($facebook);
 $googleplus: #DB4437;
 $googleplus-invert: findColorInvert($googleplus);
-$primary: $facebook;
+$primary: #069;
 $primary-invert: findColorInvert($primary);
 
 $colors: (

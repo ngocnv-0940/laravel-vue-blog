@@ -21,25 +21,15 @@
 </template>
 <script>
   import axios from 'axios'
+  import { mapGetters } from 'vuex'
   export default {
-    data() {
-      return {
-        categories: {}
-      }
-    },
+    computed: mapGetters(['categories']),
     methods: {
-      async getCategory() {
-        const { data } = await axios.get('category')
-        this.categories = data.data
-      },
       checkActive(category) {
         return category.childs.length
           ? category.childs.some(child => child.slug == this.$route.params.slug)
           : false
       }
-    },
-    created() {
-      this.getCategory()
     }
   }
 </script>

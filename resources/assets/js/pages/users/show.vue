@@ -22,7 +22,7 @@
             <div class="media-content">
               <div class="content">
                 <p>
-                  <strong>{{ user.name }}</strong>
+                  <strong>{{ user.name }}</strong><br>
                   <small>@{{ user.username }}</small>
                 </p>
               </div>
@@ -32,7 +32,7 @@
             <table class="table is-fullwidth">
               <tr>
                 <th>Email</th>
-                <td class="has-text-right">á</td>
+                <td class="has-text-right">{{ user.email }}</td>
               </tr>
               <tr>
                 <th>Bài viết</th>
@@ -54,6 +54,12 @@
 import axios from 'axios'
 import Post from '../posts/post'
 export default {
+  props: {
+    params: {
+      type: Object,
+      required: false
+    }
+  },
   metaInfo () {
     return { title: 'User' }
   },
@@ -65,14 +71,19 @@ export default {
       total: 0
     }
   },
-  created() {
-    this.getPosts()
+  async created() {
+    await this.getPosts()
+    this.$store.commit('setTitle', { title: this.user.name, subtitle: `@${this.user.username}` })
   },
   methods: {
     async getPosts() {
       const loading = this.$loading.open()
       try {
-        let params = { page: this.page, user: this.$route.params.username }
+        let params = {
+          page: this.page,
+          user: this.$route.params.username,
+          ...this.params
+        }
         let { data } = await axios.get(route('user.show', params))
 
         if (data.posts.current_page <= data.posts.last_page) {

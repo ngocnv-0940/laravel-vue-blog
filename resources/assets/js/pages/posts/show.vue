@@ -2,7 +2,10 @@
   <div class="container">
     <div class="columns">
       <div class="is-three-quarters column">
-        <h1 class="title is-spaced">{{ post.title }}</h1>
+        <h1 class="title is-spaced">
+          <button class="button is-danger is-outlined" v-if="post.is_public === false">Bản nháp</button>
+          {{ post.title }}
+        </h1>
         <p class="content">{{ post.excerpt }}</p>
         <nav class="level">
           <div class="level-left" v-if="post.slug">
@@ -54,7 +57,6 @@
         </nav>
         <hr>
         <div class="content has-text-justified">
-          <!-- {{ post.content }} -->
           <markdown :text="post.content"></markdown>
         </div>
         <nav class="level">
@@ -110,6 +112,15 @@ import axios from 'axios'
 import Comment from './Comment'
 import { mapGetters, mapActions, mapState } from 'vuex'
 export default {
+  metaInfo() {
+    return {
+      title: this.post.title || 'Đang tải',
+      meta: [
+        { name: 'keywords', content: this.post.meta_keywords },
+        { name: 'description', content: this.post.meta_description }
+      ]
+    }
+  },
   created() {
     this.fetchArticle('post.show')
     this.fetchComments({ refresh: true })

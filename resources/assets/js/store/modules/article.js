@@ -39,6 +39,7 @@ export const actions = {
     try {
       let { data: { data }} = await axios.get(window.route(route, rootState.route.params.slug))
       commit(types.SET_ARTICLE, data)
+      commit('setTitle', { title: data.title, subtitle: data.category.name }, { root: true })
     } catch (e) {}
     loading.close()
   },

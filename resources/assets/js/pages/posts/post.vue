@@ -7,8 +7,11 @@
     </figure>
     <div class="media-content">
       <div class="content">
-          <router-link :to="{ name: 'post.single', params: { slug: post.slug }}">
-            <h2 class=" is-size-5 has-text-dark">{{ post.title }}</h2>
+          <router-link :to="{ name: 'post.show', params: { slug: post.slug }}">
+            <h2 class=" is-size-5 has-text-dark">
+              <button class="button is-danger is-outlined is-small" v-if="post.is_public == false">Bản nháp</button>
+              {{ post.title }}
+            </h2>
           </router-link>
           <p class="has-text-justified">{{ post.excerpt }}</p>
           <b-taglist style="margin-top: 0.5em">

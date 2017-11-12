@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\Draft;
 use App\Traits\Likeable;
+use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    use Likeable;
+    use Likeable, Draft;
+
+    const DEFAULT_IMAGE = 'https://bulma.io/images/placeholders/640x480.png';
 
     protected $guarded = [];
 
@@ -19,6 +22,11 @@ class Post extends Model
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    public function getImageAttribute($image)
+    {
+        return $image ?? self::DEFAULT_IMAGE;
     }
 
     public function author()

@@ -26,7 +26,7 @@ axios.interceptors.response.use(response => response, error => {
     })
   }
 
-  if (status === 404) {
+  if (status === 404 || status === 403) {
     Toast.open({
       message: i18n.t('page_not_found'),
       type: 'is-danger'

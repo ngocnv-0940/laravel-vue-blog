@@ -1,7 +1,8 @@
-const CategoryNav = () => import('~/pages/categories/CategoryNav.vue')
 const PostIndex = () => import('~/pages/posts/index.vue')
+const PostShow = () => import('~/pages/posts/show.vue')
+const PostCreate = () => import('~/pages/posts/create.vue')
 const CategoryShow = () => import('~/pages/categories/show.vue')
-const TagShow = () => import('~/pages/posts/Tag.vue')
+const TagShow = () => import('~/pages/tags/show.vue')
 const UserShow = () => import('~/pages/users/show.vue')
 import Search from '~/pages/posts/search.vue'
 
@@ -10,25 +11,32 @@ export default ({ authGuard, guestGuard }) => [
   { path: '/', name: 'welcome', component: require('~/pages/welcome.vue') },
   {
     path: '/category/:slug/:page(\\d+)?', name: 'post.category', component: CategoryShow,
-    meta: { category: CategoryNav }
+    meta: { tab: 'category' }
   },
   {
-    path: '/user/:username/:page(\\d+)?', name: 'user.show', component: UserShow
+    path: '/user/:username/drafts/:page(\\d+)?', name: 'user.drafts', component: UserShow,
+    props: { params: { scope: 'drafts' }},
+    meta: { tab: 'user' }
   },
   {
-    path: '/tag/:slug/:page(\\d+)?', name: 'tag.show', component: TagShow
+    path: '/user/:username/:page(\\d+)?', name: 'user.show', component: UserShow,
+    meta: { tab: 'user' }
+  },
+  {
+    path: '/tag/:slug/:page(\\d+)?', name: 'tag.show', component: TagShow,
+    meta: { tab: 'tag' }
   },
   {
     path: '/post/featured/:page(\\d+)?', name: 'post.featured', component: PostIndex,
     props: { params: { scope: 'featured' }},
-    meta: { scrollToTop: true }
+    meta: { scrollToTop: true, tab: 'post' }
   },
   {
     path: '/post/:page(\\d+)?', name: 'post.list', component: PostIndex,
-    meta: { scrollToTop: true }
+    meta: { scrollToTop: true, tab: 'post' }
   },
-  { path: '/post/:slug', name: 'post.single', component: require('~/pages/posts/single.vue'),
-    meta: { scrollToTop: true }
+  { path: '/post/:slug', name: 'post.show', component: PostShow,
+    meta: { scrollToTop: true, tab: 'post' }
   },
 
   // Authenticated routes.
@@ -38,7 +46,8 @@ export default ({ authGuard, guestGuard }) => [
       { path: '', redirect: { name: 'settings.profile' }},
       { path: 'profile', name: 'settings.profile', component: require('~/pages/settings/profile.vue') },
       { path: 'password', name: 'settings.password', component: require('~/pages/settings/password.vue') }
-    ] }
+    ] },
+    { path: '/create/post', name: 'post.create', component: PostCreate }
   ]),
 
   // Guest routes.

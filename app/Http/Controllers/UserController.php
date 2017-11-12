@@ -45,12 +45,23 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(User $user, Request $request)
     {
-        $posts = $user->posts()->with(['author', 'category', 'tags'])->latest()->paginate();
+        $request->validate([
+            'scope' => 'string|nullable'
+        ]);
+
+        $posts = $user->posts()->with(['author', 'category', 'tags']);
+
+        if ($request->get('scope') == 'drafts') {
+            if (auth()->id() !== $user->id) {
+                abort(403);
+            }
+            $posts = $posts->onlyDraft();
+        }
 
         return [
-            'posts' => $posts,
+            'posts' => $posts->latest()->paginate(),
             'user' => new UserResource($user)
         ];
     }

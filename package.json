@@ -23,9 +23,10 @@
     "vform": "^0.8.1",
     "vue": "^2.5.2",
     "vue-i18n": "^7.3.1",
-    "vue-markdown": "^2.2.4",
+    "vue-input-tag": "0.0.16",
     "vue-meta": "^1.2.0",
     "vue-router": "^3.0.1",
+    "vue-simplemde": "^0.4.6",
     "vue-timeago": "^3.3.6",
     "vuex": "^3.0.0",
     "vuex-router-sync": "^5.0.0"
