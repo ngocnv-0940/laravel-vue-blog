@@ -35,7 +35,7 @@ import axios from 'axios'
 import Post from './post'
 export default {
   metaInfo () {
-    return { title: 'My Blog' }
+    return { title: 'Tin tức' }
   },
   props: {
     params: {
@@ -53,6 +53,7 @@ export default {
     }
   },
   created() {
+    this.$store.commit('setTitle', { title: 'Tin tức' })
     this.getPosts()
     this.getTags()
   },

@@ -32,7 +32,12 @@ function make (routes) {
   })
 
   // Register before guard.
-  router.beforeEach(async (to, from, next) => {
+  router.beforeResolve(async (to, from, next) => {
+    store.commit('setTab', to.meta.tab)
+    if (!to.meta.tab) {
+      store.commit('setTitle', { title: null, subtitle: null })
+    }
+
     if (!store.getters.authCheck && store.getters.authToken) {
       try {
         await store.dispatch('fetchUser')

@@ -26,7 +26,7 @@ import axios from 'axios'
 import Post from '../posts/post'
 export default {
   metaInfo () {
-    return { title: 'Category' }
+    return { title: this.tag.name || 'Đang tải' }
   },
   data() {
     return {
@@ -48,6 +48,7 @@ export default {
           this.posts = data.posts.data
           this.tag = data.tag
           this.total = data.posts.total
+          this.$store.commit('setTitle', { title: this.tag.name })
         } else {
           this.$toast.open({
             message: this.$t('error_alert_text'),

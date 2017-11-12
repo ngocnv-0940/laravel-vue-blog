@@ -22,7 +22,7 @@
             <div class="media-content">
               <div class="content">
                 <p>
-                  <strong>{{ user.name }}</strong>
+                  <strong>{{ user.name }}</strong><br>
                   <small>@{{ user.username }}</small>
                 </p>
               </div>
@@ -32,7 +32,7 @@
             <table class="table is-fullwidth">
               <tr>
                 <th>Email</th>
-                <td class="has-text-right">á</td>
+                <td class="has-text-right">{{ user.email }}</td>
               </tr>
               <tr>
                 <th>Bài viết</th>
@@ -71,8 +71,9 @@ export default {
       total: 0
     }
   },
-  created() {
-    this.getPosts()
+  async created() {
+    await this.getPosts()
+    this.$store.commit('setTitle', { title: this.user.name, subtitle: `@${this.user.username}` })
   },
   methods: {
     async getPosts() {

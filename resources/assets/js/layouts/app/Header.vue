@@ -123,8 +123,9 @@
         </a>
       </div>
       <div class="navbar-item has-dropdown is-hoverable" v-else>
-        <router-link to="/" exact class="navbar-link">Chào {{ user.name }}!</router-link>
+        <router-link :to="{ name: 'user.show', params: { username: user.username }}" exact class="navbar-link">Chào {{ user.name }}!</router-link>
         <div class="navbar-dropdown is-boxed">
+          <router-link :to="{ name: 'user.show', params: { username: user.username }}" exact class="navbar-item">Trang cá nhân</router-link>
           <a class="navbar-item" @click.prevent="logout">Đăng xuất</a>
           <hr class="navbar-divider">
           <strong class="navbar-item has-text-grey">NgocBlog v1.0.0</strong>
@@ -140,8 +141,8 @@
 <div class="hero is-primary">
   <div class="hero-body">
     <div class="container">
-      <h1 class="title">{{ header.title }}</h1>
-      <h2 class="subtitle">{{ header.subtitle }}</h2>
+      <h1 class="title">{{ header.title || `Blaysku's blog` }}</h1>
+      <h2 class="subtitle">{{ header.subtitle || 'Lorem ipsum dolor sit amet.' }}</h2>
     </div>
   </div>
   <div class="hero-foot">
@@ -149,16 +150,14 @@
       <nav class="tabs is-boxed">
         <ul>
           <li v-for="tab in tabs"
+            v-if="tab.title"
             :key="tab.title"
-            :class="{ 'is-active': currentTab === tab.component }">
+            :class="{ 'is-active': currentTab && currentTab.name === tab.name }">
               <a @click="changeTab(tab)">
                 {{ tab.title }}
               </a>
           </li>
-<!--           <li class="is-active">
-            <a>{{ header.tabName }}</a>
-          </li> -->
-      </ul>
+        </ul>
       </nav>
     </div>
   </div>
@@ -166,8 +165,7 @@
 <nav class="navbar has-shadow">
   <div class="container">
     <keep-alive>
-      <!-- <component :is="currentTab"></component> -->
-      <component :is="header.tab"></component>
+      <component v-if="currentTab" :is="currentTab.component"></component>
     </keep-alive>
   </div>
 </nav>
@@ -178,7 +176,6 @@
 import axios from 'axios'
 import { mapGetters, mapState } from 'vuex'
 import tabs from './tabs.js'
-import Post from '../../pages/posts/PostNav'
 import LoginForm from '~/pages/auth/LoginForm'
 
 export default {
@@ -187,18 +184,18 @@ export default {
   },
 
   data: () => ({
-    currentTab: Post,
     tabs,
     appName: window.config.appName,
     isMenuActive: false,
-    showLogin: false,
-    categories: []
+    showLogin: false
   }),
 
   computed: {
     ...mapGetters({
       user: 'authUser',
-      authenticated: 'authCheck'
+      authenticated: 'authCheck',
+      currentTab: 'currentTab',
+      categories: 'categories'
     }),
     ...mapState(['header'])
   },
@@ -207,43 +204,22 @@ export default {
     async logout () {
       // Log out the user.
       await this.$store.dispatch('logout')
-
       // Redirect to login.
       // this.$router.push({ name: 'login' })
     },
-    tweet() {
-      const width = 575
-      const height = 400
-      const left = (window.screen.width - width) / 2
-      const top = (window.screen.height - height) / 2
-      const url = `https://twitter.com/share?url=${encodeURIComponent(document.location.protocol + '//' + document.location.host)}&text=Buefy: lightweight UI components for Vue.js based on Bulma&hashtags=buefy&via=rafaelpimpa`
-      const opts = `status=1,width=${width},height=${height},top=${top},left=${left}`
-
-      window.open(url, '', opts)
-    },
     changeTab(tab) {
-      this.currentTab = tab.component
       this.$router.push({ name: tab.route, params: tab.params || {}})
-    },
-    async getCategory() {
-      const { data } = await axios.get(route('category.index'))
-      this.categories = data.data
-    },
+    }
   },
   created() {
-    this.getCategory()
+    this.$store.dispatch('getCategories')
   },
-  beforeRouteUpdate(to, from, next) {
-    console.log(123)
-    this.$refs.header.isMenuActive = false
-    this.currentTab = to.meta.category
-    next()
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.currentTab = to.meta.category
-    })
-  },
+  // beforeUpdate(to, from, next) {
+  //   console.log(123)
+  //   this.$refs.header.isMenuActive = false
+  //   this.currentTab = to.meta.category
+  //   next()
+  // },
   components: {
     LoginForm
   }

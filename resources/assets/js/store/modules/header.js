@@ -1,29 +1,38 @@
 import axios from 'axios'
-import * as types from '../mutation-types'
-import { LoadingProgrammatic as Loading } from 'buefy'
-const Category = () => import('~/pages/categories/CategoryNav.vue')
-
-export const namespaced = true
+import tabs from '~/layouts/app/tabs'
 
 // state
 export const state = {
-  title: 'Just a simple blog',
-  subtitle: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi quo tempore quis vero atque eos.',
-  tabName: 'Chuyên mục',
-  tab: Category
+  tab: null,
+  title: null,
+  subtitle: null,
+  categories: []
 }
 
 // getter
 export const getters = {
-
+  currentTab: state => tabs.find(tab => tab.name == state.tab),
+  categories: state => state.categories
 }
 
 // mutations
 export const mutations = {
-
+  setTab(state, tab) {
+    state.tab = tab
+  },
+  setTitle(state, { title, subtitle }) {
+    state.title = title
+    state.subtitle = subtitle
+  },
+  setCategories(state, categories) {
+    state.categories = categories
+  }
 }
 
 // actions
 export const actions = {
-
+  async getCategories({ commit }) {
+    const { data: { data }} = await axios.get(window.route('category.index'))
+    commit('setCategories', data)
+  }
 }

@@ -24,10 +24,9 @@
 <script>
 import axios from 'axios'
 import Post from '../posts/post'
-const Category = () => import('~/pages/categories/CategoryNav.vue')
 export default {
   metaInfo () {
-    return { title: 'Category' }
+    return { title: this.category.name || 'Đang tải' }
   },
   data() {
     return {
@@ -37,9 +36,9 @@ export default {
       total: 0
     }
   },
-  created() {
-    this.getPosts()
-    this.$store.state.header.tab = Category
+  async created() {
+    await this.getPosts()
+    this.$store.commit('setTitle', { title: this.category.name })
   },
   methods: {
     async getPosts() {
@@ -67,11 +66,12 @@ export default {
     },
   },
   watch: {
-    '$route' (to, from) {
+    async '$route' (to, from) {
       this.page = +to.params.page
       if (to.params.page == undefined)
         this.page = 1
-      this.getPosts()
+      await this.getPosts()
+      this.$store.commit('setTitle', { title: this.category.name })
     }
   },
   components: {
