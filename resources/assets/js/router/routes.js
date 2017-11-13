@@ -1,6 +1,8 @@
 const PostIndex = () => import('~/pages/posts/index.vue')
 const PostShow = () => import('~/pages/posts/show.vue')
 const PostCreate = () => import('~/pages/posts/create.vue')
+const PostEdit = () => import('~/pages/posts/edit.vue')
+
 const CategoryShow = () => import('~/pages/categories/show.vue')
 const TagShow = () => import('~/pages/tags/show.vue')
 const UserShow = () => import('~/pages/users/show.vue')
@@ -47,7 +49,8 @@ export default ({ authGuard, guestGuard }) => [
       { path: 'profile', name: 'settings.profile', component: require('~/pages/settings/profile.vue') },
       { path: 'password', name: 'settings.password', component: require('~/pages/settings/password.vue') }
     ] },
-    { path: '/create/post', name: 'post.create', component: PostCreate }
+    { path: '/create/post', name: 'post.create', component: PostCreate},
+    { path: '/post/:slug/edit', name: 'post.edit', component: PostEdit, meta: { tab: 'post' }},
   ]),
 
   // Guest routes.

@@ -17,10 +17,6 @@ class PostController extends Controller
         $this->post = $post;
     }
 
-    // private $dataSelect = [
-    //     'id', 'user_id', 'category_id', 'title', 'slug', 'excerpt', 'image', 'created_at'
-    // ];
-
     /**
      * Display a listing of the resource.
      *
@@ -44,16 +40,6 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -61,34 +47,31 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        if (auth()->check()) {
-            $data = $request->validate([
-                'title' => 'required|unique:posts,title|max:255',
-                'category_id' => 'required|integer|exists:categories,id',
-                'content' => 'required|string',
-                'excerpt' => 'string|max:255',
-                'tags' => 'array|nullable',
-                'is_public' => 'boolean',
-                'meta_keywords' => 'string|nullable'
-            ]);
-            $data['meta_description'] = $data['excerpt'];
-            $data['slug'] = str_slug($data['title']);
-            $data['user_id'] = auth()->id();
-            $newPost = $this->post->create(array_except($data, 'tags'));
-            $tagIds = [];
-            foreach ($data['tags'] as $tag) {
-                $tag = trim($tag);
-                if ($tag == '') {
-                    continue;
-                }
-                $aTag = Tag::firstOrCreate(['name' => $tag], ['slug' => str_slug($tag)]);
-                $tagIds[] = $aTag->id;
+        abort_unless(auth()->check(), 500, 'Please login to do this action');
+        $data = $request->validate([
+            'title' => 'required|unique:posts,title|max:255',
+            'category_id' => 'required|integer|exists:categories,id',
+            'content' => 'required|string',
+            'excerpt' => 'string|max:255',
+            'tags' => 'array|nullable',
+            'is_public' => 'boolean',
+            'meta_keywords' => 'string|nullable'
+        ]);
+        $data['meta_description'] = $data['excerpt'];
+        $data['slug'] = str_slug($data['title']);
+        $data['user_id'] = auth()->id();
+        $newPost = $this->post->create(array_except($data, 'tags'));
+        $tagIds = [];
+        foreach ($data['tags'] as $tag) {
+            $tag = trim($tag);
+            if ($tag == '') {
+                continue;
             }
-            $newPost->tags()->sync($tagIds);
-            return $newPost;
+            $aTag = Tag::firstOrCreate(['name' => $tag], ['slug' => str_slug($tag)]);
+            $tagIds[] = $aTag->id;
         }
-
-        abort(500, 'Please login to do this action');
+        $newPost->tags()->sync($tagIds);
+        return $newPost;
     }
 
     /**
@@ -96,24 +79,10 @@ class PostController extends Controller
      * @param  String $postSlug
      * @return \App\Http\Resources\PostResource
      */
-    public function show($postSlug)
+    public function show(Post $post)
     {
-        $post = Post::withDraft()->whereSlug($postSlug)->firstOrFail();
-        if ($post->is_public || auth()->id() === $post->user_id) {
-            return new PostResource($post->load(['author', 'category', 'tags', 'likes']));
-        }
-        abort(403);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Post $post)
-    {
-        //
+        abort_unless($post->is_public || auth()->id() === $post->user_id, 403);
+        return new PostResource($post->load(['author', 'category', 'tags', 'likes']));
     }
 
     /**
@@ -125,7 +94,53 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $this->authorize('manage', $post);
+        $data = $request->validate([
+            'title' => 'required|max:255|unique:posts,title,' . $post->id,
+            'category_id' => 'required|integer|exists:categories,id',
+            'content' => 'required|string',
+            'excerpt' => 'string|max:255',
+            'tags' => 'array|nullable',
+            'is_public' => 'boolean',
+            'meta_keywords' => 'string|nullable',
+        ]);
+        $data['meta_description'] = $data['excerpt'];
+        $data['slug'] = str_slug($data['title']);
+        $data['user_id'] = auth()->id();
+        $post->update(array_except($data, 'tags'));
+        $tagIds = [];
+        foreach ($data['tags'] as $tag) {
+            $tag = trim($tag);
+            if ($tag == '') {
+                continue;
+            }
+            $aTag = Tag::firstOrCreate(['name' => $tag], ['slug' => str_slug($tag)]);
+            $tagIds[] = $aTag->id;
+        }
+        $post->tags()->sync($tagIds);
+
+        return $post;
+    }
+
+    /**
+     * Change resource status
+     *
+     * @param  Request $request
+     * @return array
+     */
+    public function changeStatus(Request $request)
+    {
+        $data = $request->validate([
+            'id' => 'required|array',
+            'value' => 'required|boolean'
+        ]);
+
+        \DB::transaction(function () {
+            $this->post->whereIn('id', $data['id'])
+                ->update(['status' => $data['value']]);
+        });
+
+        return ['status' => true];
     }
 
     /**
@@ -136,6 +151,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $this->authorize('manage', $post);
+
+        return [ 'status' => $post->delete() ];
     }
 }
