@@ -135,9 +135,9 @@ class PostController extends Controller
             'value' => 'required|boolean'
         ]);
 
-        \DB::transaction(function () {
-            $this->post->whereIn('id', $data['id'])
-                ->update(['status' => $data['value']]);
+        \DB::transaction(function () use ($data) {
+            $this->post->withDraft()->whereIn('id', $data['id'])
+                ->update(['is_public' => $data['value']]);
         });
 
         return ['status' => true];

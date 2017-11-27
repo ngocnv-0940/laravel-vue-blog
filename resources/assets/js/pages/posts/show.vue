@@ -65,8 +65,9 @@
                   <b-icon icon="edit"></b-icon>Chỉnh sửa
                 </router-link>
               </b-dropdown-item>
-              <b-dropdown-item>
-                <b-icon icon="save"></b-icon>Lưu nháp
+              <b-dropdown-item @click="updateStatus">
+                <b-icon :icon="post.is_public ? 'save' : 'publish'"></b-icon>
+                {{ post.is_public ? 'Lưu nháp' : 'Công khai '}}
               </b-dropdown-item>
               <b-dropdown-item separator></b-dropdown-item>
               <b-dropdown-item class="has-text-danger" @click="deletePost">
@@ -153,6 +154,13 @@ export default {
   methods: {
     ...mapActions('article', ['fetchArticle', 'updateArticle', 'likeOrUnlike', 'deleteArticle']),
     ...mapActions('comment', ['fetchComments']),
+    async updateStatus() {
+      await axios.patch(route('post.status'), {
+        id: [ this.post.id ],
+        value: !this.post.is_public
+      })
+      this.updateArticle({ is_public: !this.post.is_public })
+    },
     deletePost() {
       this.$dialog.confirm({
         title: 'Xóa bài viết',
