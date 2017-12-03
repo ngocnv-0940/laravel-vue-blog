@@ -53,6 +53,27 @@
                 <span class="icon is-small"><i class="fa fa-link"></i></span>
               </b-tooltip>
             </a>
+            <b-dropdown hoverable class="level-item"
+              v-if="authCheck && authUser.id == post.author.id">
+              <a class="button is-info is-small is-outlined" slot="trigger">
+                <b-icon icon="pencil-square-o" pack="fa"></b-icon>
+                Tùy chọn
+                <b-icon icon="arrow_drop_down"></b-icon>
+              </a>
+              <b-dropdown-item has-link>
+                <router-link :to="{ name: 'post.edit', params: { slug: post.slug }}">
+                  <b-icon icon="edit"></b-icon>Chỉnh sửa
+                </router-link>
+              </b-dropdown-item>
+              <b-dropdown-item @click="updateStatus">
+                <b-icon :icon="post.is_public ? 'save' : 'publish'"></b-icon>
+                {{ post.is_public ? 'Lưu nháp' : 'Công khai '}}
+              </b-dropdown-item>
+              <b-dropdown-item separator></b-dropdown-item>
+              <b-dropdown-item class="has-text-danger" @click="deletePost">
+                <b-icon icon="delete"></b-icon>Xóa bài này
+              </b-dropdown-item>
+            </b-dropdown>
           </div>
         </nav>
         <hr>
@@ -96,7 +117,7 @@
               <div class="content">
                 <p>
                   <strong>{{ post.author.name }}</strong>
-                  <small>@johnsmith</small>
+                  <small>@{{ post.author.username }}</small>
                 </p>
               </div>
             </div>
@@ -131,8 +152,33 @@ export default {
     ...mapState('article', { post: 'article' })
   },
   methods: {
-    ...mapActions('article', ['fetchArticle', 'updateArticle', 'likeOrUnlike']),
-    ...mapActions('comment', ['fetchComments'])
+    ...mapActions('article', ['fetchArticle', 'updateArticle', 'likeOrUnlike', 'deleteArticle']),
+    ...mapActions('comment', ['fetchComments']),
+    async updateStatus() {
+      await axios.patch(route('post.status'), {
+        id: [ this.post.id ],
+        value: !this.post.is_public
+      })
+      this.updateArticle({ is_public: !this.post.is_public })
+    },
+    deletePost() {
+      this.$dialog.confirm({
+        title: 'Xóa bài viết',
+        message: 'Bạn có chắc muốn <b>xóa</b> bài viết này? Hành dộng này không thể hoàn tác.',
+        confirmText: 'Xóa',
+        type: 'is-danger',
+        hasIcon: true,
+        onConfirm: async () => {
+          let slug = this.$route.params.slug
+          await axios.delete(route('post.destroy', slug))
+          this.$toast.open({
+            message: 'Đã xóa bài viết thành công!',
+            type: 'is-success'
+          }),
+          this.$router.go(-1)
+        }
+      })
+    },
   },
   watch: {
     '$route' (to, from) {

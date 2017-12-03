@@ -15,6 +15,7 @@ class PostResource extends Resource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
             'excerpt' => $this->excerpt,

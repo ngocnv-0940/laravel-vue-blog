@@ -32,7 +32,7 @@ function make (routes) {
   })
 
   // Register before guard.
-  router.beforeResolve(async (to, from, next) => {
+  router.beforeEach(async (to, from, next) => {
     store.commit('setTab', to.meta.tab)
     if (!to.meta.tab) {
       store.commit('setTitle', { title: null, subtitle: null })
@@ -44,6 +44,11 @@ function make (routes) {
       } catch (e) { }
     }
 
+    next()
+  })
+
+  // Register before resolve guard
+  router.beforeResolve((to, from, next) => {
     setLayout(router, to)
     next()
   })

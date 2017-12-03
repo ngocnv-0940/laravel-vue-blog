@@ -37,11 +37,11 @@
             </markdown-editor>
         </b-field>
         <div class="has-text-centered">
-            <a class="button is-outlined" @click="storePost(false)">
+            <a class="button is-outlined" @click="updatePost(false)">
                 <b-icon icon="save"></b-icon>
                 <span>Lưu nháp</span>
             </a>
-            <a class="button is-primary is-outlined" @click="storePost()">
+            <a class="button is-primary is-outlined" @click="updatePost()">
                 <b-icon icon="publish"></b-icon>
                 <span>Đăng bài</span>
             </a>
@@ -49,65 +49,71 @@
     </div>
 </template>
 <script>
-    import MarkdownEditor from 'vue-simplemde/src/markdown-editor'
-    import InputTag from 'vue-input-tag'
-    import axios from 'axios'
-    import Form from 'vform'
-    import stripmd from '~/helpers/stripmd.js'
-    import { mapGetters } from 'vuex'
-    export default {
-        data() {
-            return {
-                tags: [],
-                mdConfig: {
-                    autosave: {
-                        enabled: true,
-                        uniqueId: "blaysku",
-                        delay: 1000,
-                    },
-                    status: ["autosave", "lines", "words", "cursor"],
-                    autoDownloadFontAwesome: false,
-                    spellChecker: false,
-                    showIcons: ['code', 'table', 'strikethrough', 'horizontal-rule'],
-                    hideIcons: ['guide']
-                },
-                form: new Form({
-                    title: '',
-                    category_id: null,
-                    excerpt: '',
-                    content: '',
-                    is_public: true,
-                    meta_keywords: '',
-                    tags: []
-                })
-            }
-        },
-        computed: mapGetters(['categories']),
-        methods: {
-            async storePost(isPublic = true) {
-                this.form.is_public = isPublic
-                this.form.excerpt = this.getExcerpt(this.form.content, 155)
-                this.form.meta_keywords = this.form.tags.toString()
-                let { data: { slug, is_public }} = await this.form.post(route('post.store'))
-                this.$router.push({ name: 'post.show', params: { slug }})
-                let notify = is_public ?
-                    'Bài viết của bạn đã được đăng thành công!' :
-                    'Lưu nháp thành công!'
-                this.$snackbar.open(notify)
-            },
-            getExcerpt (content, maxLength) {
-                let stripped = stripmd(content.trim()).replace(/(\r\n|\n|\r)/gm,' ')
-                if (stripped.length > maxLength) {
-                    stripped = stripped.substr(0, maxLength) + '...'
-                }
-                return stripped
-            }
-        },
-        components: {
-          MarkdownEditor,
-          InputTag
-        }
+import MarkdownEditor from 'vue-simplemde/src/markdown-editor'
+import InputTag from 'vue-input-tag'
+import axios from 'axios'
+import Form from 'vform'
+import stripmd from '~/helpers/stripmd.js'
+import { mapGetters } from 'vuex'
+export default {
+  data() {
+    return {
+      mdConfig: {
+        status: ["lines", "words", "cursor"],
+        autoDownloadFontAwesome: false,
+        spellChecker: false,
+        showIcons: ['code', 'table', 'strikethrough', 'horizontal-rule'],
+        hideIcons: ['guide']
+      },
+      form: new Form({
+        title: '',
+        category_id: null,
+        excerpt: '',
+        content: '',
+        is_public: true,
+        meta_keywords: '',
+        tags: []
+      }),
+      slug: ''
     }
+  },
+  computed: mapGetters(['categories']),
+  methods: {
+    async updatePost(isPublic = true) {
+      this.form.is_public = isPublic
+      this.form.excerpt = this.getExcerpt(this.form.content, 155)
+      this.form.meta_keywords = this.form.tags.toString()
+      let { data: { slug, is_public }} = await this.form.patch(route('post.update', this.slug))
+      this.$router.push({ name: 'post.show', params: { slug }})
+      let notify = is_public ?
+        'Bài viết của bạn đã được đăng/cập nhật thành công!' :
+        'Lưu nháp/cập nhật thành công!'
+      this.$snackbar.open(notify)
+    },
+    getExcerpt (content, maxLength) {
+      let stripped = stripmd(content.trim()).replace(/(\r\n|\n|\r)/gm,' ')
+      if (stripped.length > maxLength) {
+        stripped = stripped.substr(0, maxLength) + '...'
+      }
+      return stripped
+    },
+    async fetchPost() {
+      let { data: { data }} = await axios.get(route('post.show', this.$route.params.slug))
+      this.slug = data.slug
+      this.form.tags = data.tags.map(tag => tag.name)
+      this.form.title = data.title
+      this.form.category_id = data.category.id
+      this.form.content = data.content
+    }
+  },
+  created() {
+    this.fetchPost()
+  },
+  components: {
+    MarkdownEditor,
+    InputTag
+  }
+}
 </script>
 <style>
   @import '~simplemde/dist/simplemde.min.css';

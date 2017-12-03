@@ -13,11 +13,10 @@ class PostPolicy
     /**
      * Determine whether the user can view the post.
      *
-     * @param  \App\Models\User  $user
      * @param  \App\Models\Post  $post
      * @return mixed
      */
-    public function view(User $user, Post $post)
+    public function view(Post $post)
     {
         //
     }
@@ -33,27 +32,8 @@ class PostPolicy
         //
     }
 
-    /**
-     * Determine whether the user can update the post.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Post  $post
-     * @return mixed
-     */
-    public function update(User $user, Post $post)
+    public function manage(User $user, Post $post)
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can delete the post.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Post  $post
-     * @return mixed
-     */
-    public function delete(User $user, Post $post)
-    {
-        //
+        return $user->id === $post->user_id;
     }
 }
