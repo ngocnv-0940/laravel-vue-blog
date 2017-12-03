@@ -8,7 +8,7 @@
             </header>
             <component :is="activetab.component" ref="child" @closeModal="$parent.close()"></component>
             <footer class="modal-card-foot">
-                <button class="button" type="button" @click="$parent.close()">Close</button>
+                <button class="button" type="button" @click="$parent.close()">Đóng</button>
                 <button class="button is-primary">{{ activetab.label }}</button>
             </footer>
         </div>
@@ -23,12 +23,12 @@
             tab: 0,
             tabs: [
                 {
-                    label: 'Sign in',
+                    label: 'Đăng nhập',
                     icon: 'sign-in',
                     component: Login
                 },
                 {
-                    label: 'Sign up',
+                    label: 'Đăng ký',
                     icon: 'user-plus',
                     component: Register
                 }

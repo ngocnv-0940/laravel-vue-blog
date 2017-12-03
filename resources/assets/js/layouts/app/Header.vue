@@ -1,6 +1,6 @@
 <template>
   <section>
-    <header class="navbar is-transparent">
+    <header class="navbar is-transparent is-fixed-top">
       <div class="container">
         <div class="navbar-brand">
           <router-link to="/" exact class="navbar-item" title="Just a blog">
@@ -109,7 +109,7 @@
           <b-field>
             <router-link :to="{ name: 'post.create' }" class="button is-primary is-outlined">
               <span class="icon">
-                <b-icon icon="create"></b-icon>
+                <b-icon icon="pencil"></b-icon>
               </span>
               <span>Đăng bài</span>
             </router-link>

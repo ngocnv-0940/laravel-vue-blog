@@ -58,7 +58,7 @@
               <a class="button is-info is-small is-outlined" slot="trigger">
                 <b-icon icon="pencil-square-o" pack="fa"></b-icon>
                 Tùy chọn
-                <b-icon icon="arrow_drop_down"></b-icon>
+                <b-icon icon="caret-down"></b-icon>
               </a>
               <b-dropdown-item has-link>
                 <router-link :to="{ name: 'post.edit', params: { slug: post.slug }}">
@@ -66,12 +66,12 @@
                 </router-link>
               </b-dropdown-item>
               <b-dropdown-item @click="updateStatus">
-                <b-icon :icon="post.is_public ? 'save' : 'publish'"></b-icon>
+                <b-icon :icon="post.is_public ? 'floppy-o' : 'send-o'"></b-icon>
                 {{ post.is_public ? 'Lưu nháp' : 'Công khai '}}
               </b-dropdown-item>
               <b-dropdown-item separator></b-dropdown-item>
               <b-dropdown-item class="has-text-danger" @click="deletePost">
-                <b-icon icon="delete"></b-icon>Xóa bài này
+                <b-icon icon="trash"></b-icon>Xóa bài này
               </b-dropdown-item>
             </b-dropdown>
           </div>
@@ -86,7 +86,7 @@
               <a class="button level-item is-outlined"
                 :class="{ 'is-danger': hasLiked, 'is-primary': !hasLiked }"
                 @click="authCheck ? likeOrUnlike('post') : null">
-                <b-icon pack="mdi" icon="favorite"></b-icon>
+                <b-icon icon="heart"></b-icon>
                 <small>{{ post.likes_count }} Thích</small>
               </a>
             </b-tooltip>
@@ -105,7 +105,7 @@
         <hr>
         <comment></comment>
       </div>
-      <div class="column is-12-touch">
+      <div class="column is-12-touch is-fixed-top">
         <section class="right-sidebar">
           <article class="media">
             <figure class="media-left">
@@ -122,7 +122,7 @@
               </div>
             </div>
           </article>
-          <button class="button is-small is-outlined is-primary"><i class="fa fa-plus-circle"></i>&nbsp;Follow</button>
+          <!-- <button class="button is-small is-outlined is-primary"><i class="fa fa-plus-circle"></i>&nbsp;Follow</button> -->
         </section>
       </div>
     </div>

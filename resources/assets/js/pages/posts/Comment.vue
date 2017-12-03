@@ -106,7 +106,7 @@
         </div>
       </div>
     </article>
-
+    <article class="media" v-else>Vui lòng đăng nhập để bình luận!</article class="media">
   </div>
 </template>
 <script>

@@ -4,15 +4,14 @@
             :message="form.errors.get('title')">
             <b-input placeholder="Tiêu đề"
                 required
-                size="is-medium"
-                icon="title"
+                icon="header"
                 v-model="form.title">
             </b-input>
         </b-field>
         <b-field grouped>
             <b-field :type="form.errors.has('category_id') ? 'is-danger' : null"
                 :message="form.errors.get('category_id')">
-                <b-select placeholder="Chọn một chuyên mục" icon="person" required v-model="form.category_id" required>
+                <b-select placeholder="Chọn một chuyên mục" icon="folder" required v-model="form.category_id" required>
                     <optgroup :label="category.name" v-for="category in categories">
                         <option :value="childCat.id" v-for="childCat in category.childs">{{ childCat.name }}</option>
                     </optgroup>
@@ -32,7 +31,7 @@
             <markdown-editor
                 :sanitize="true"
                 v-model="form.content"
-                :configs="mdConfig"
+                :show-upload.sync="showUpload"
                 :class="{ 'error-field': form.errors.has('content') }">
             </markdown-editor>
         </b-field>
@@ -42,14 +41,14 @@
                 <span>Lưu nháp</span>
             </a>
             <a class="button is-primary is-outlined" @click="updatePost()">
-                <b-icon icon="publish"></b-icon>
+                <b-icon icon="send-o"></b-icon>
                 <span>Đăng bài</span>
             </a>
         </div>
     </div>
 </template>
 <script>
-import MarkdownEditor from 'vue-simplemde/src/markdown-editor'
+import MarkdownEditor from '~/components/MarkdownEditor'
 import InputTag from 'vue-input-tag'
 import axios from 'axios'
 import Form from 'vform'
@@ -58,13 +57,7 @@ import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      mdConfig: {
-        status: ["lines", "words", "cursor"],
-        autoDownloadFontAwesome: false,
-        spellChecker: false,
-        showIcons: ['code', 'table', 'strikethrough', 'horizontal-rule'],
-        hideIcons: ['guide']
-      },
+      showUpload: false,
       form: new Form({
         title: '',
         category_id: null,

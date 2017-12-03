@@ -2,7 +2,7 @@
   <footer class="footer">
     <div class="container">
       <div class="content">
-        <p>Made with <b-icon pack="mdi" icon="favorite" type="is-danger"></b-icon> by me.</p>
+        <p>Made with <b-icon icon="heart" type="is-danger"></b-icon> by me.</p>
         <p>
           <small>
             The source code is licensed under <a href="http://opensource.org/licenses/mit-license.php" target="_blank">MIT</a>.
@@ -19,7 +19,7 @@
           </p>
           <p class="control">
             <a class="button is-twitter" href="https://twitter.com/rafaelpimpa" target="_blank">
-              <b-icon pack="fa" icon="twitter"></b-icon> <span>Twitter</span>
+              <b-icon icon="twitter"></b-icon> <span>Twitter</span>
             </a>
           </p>
         </b-field>
