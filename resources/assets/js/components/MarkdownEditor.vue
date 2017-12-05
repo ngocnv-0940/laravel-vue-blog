@@ -1,48 +1,39 @@
 <template>
   <div class="markdown-editor">
     <textarea></textarea>
-    <b-modal :active="showUpload" @close="closeUpload" scroll="clip">
+    <b-modal :active.sync="showUpload">
       <form action="">
-          <div class="modal-card">
-              <header class="modal-card-head">
-                  <p class="modal-card-title">Login</p>
-              </header>
-              <section class="modal-card-body has-text-centered">
-                <b-field>
-                    <b-upload v-model="dropFiles"
-                        multiple
-                        drag-drop>
-                        <section class="section">
-                            <div class="content has-text-centered">
-                                <p>
-                                    <b-icon
-                                        icon="upload"
-                                        size="is-large">
-                                    </b-icon>
-                                </p>
-                                <p>Drop your files here or click to upload</p>
-                            </div>
-                        </section>
-                    </b-upload>
-                </b-field>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Upload ảnh</p>
+          </header>
+          <section class="modal-card-body">
+            <b-field>
+              <b-upload v-model="dropFiles" multiple drag-drop>
+                <section class="section">
+                  <div class="content has-text-centered">
+                    <p><b-icon icon="upload" size="is-large"></b-icon></p>
+                    <p>Kéo và thả file vào đây hoặc click để upload</p>
+                  </div>
+                </section>
+              </b-upload>
+            </b-field>
 
-                <div class="tags">
-                    <span v-for="(file, index) in dropFiles"
-                        :key="index"
-                        class="tag is-primary" >
-                        {{ file.name }}
-                        <button class="delete is-small"
-                            type="button"
-                            @click="deleteDropFile(index)">
-                        </button>
-                    </span>
-                </div>
-              </section>
-              <footer class="modal-card-foot">
-                  <button class="button" type="button" @click="closeUpload">Close</button>
-                  <button class="button is-primary" @click.prevent="emitUpload">Login</button>
-              </footer>
-          </div>
+            <div class="tags">
+              <span v-for="(file, index) in dropFiles" :key="index" class="tag is-primary">
+                  {{ file.name }}
+                  <button class="delete is-small"
+                    type="button"
+                    @click="deleteDropFile(index)">
+                  </button>
+                </span>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button" type="button" @click="showUpload = false">Hủy</button>
+            <!-- <button class="button is-primary" @click.prevent="emitUpload">Login</button> -->
+          </footer>
+        </div>
       </form>
     </b-modal>
   </div>
@@ -55,7 +46,8 @@ import marked from 'marked';
 export default {
   data() {
     return {
-      dropFiles: []
+      dropFiles: [],
+      showUpload: false
     }
   },
   name: 'markdown-editor',
@@ -85,8 +77,7 @@ export default {
       default() {
         return {};
       },
-    },
-    showUpload: Boolean
+    }
   },
   mounted() {
     if (this.autoinit) this.initialize();
@@ -98,6 +89,78 @@ export default {
     if (isActive) editor.toggleFullScreen();
   },
   methods: {
+    getState(cm, pos) {
+      pos = pos || cm.getCursor("start");
+      var stat = cm.getTokenAt(pos);
+      if(!stat.type) return {};
+
+      var types = stat.type.split(" ");
+
+      var ret = {},
+        data, text;
+      for(var i = 0; i < types.length; i++) {
+        data = types[i];
+        if(data === "strong") {
+          ret.bold = true;
+        } else if(data === "variable-2") {
+          text = cm.getLine(pos.line);
+          if(/^\s*\d+\.\s/.test(text)) {
+            ret["ordered-list"] = true;
+          } else {
+            ret["unordered-list"] = true;
+          }
+        } else if(data === "atom") {
+          ret.quote = true;
+        } else if(data === "em") {
+          ret.italic = true;
+        } else if(data === "quote") {
+          ret.quote = true;
+        } else if(data === "strikethrough") {
+          ret.strikethrough = true;
+        } else if(data === "comment") {
+          ret.code = true;
+        } else if(data === "link") {
+          ret.link = true;
+        } else if(data === "tag") {
+          ret.image = true;
+        } else if(data.match(/^header(\-[1-6])?$/)) {
+          ret[data.replace("header", "heading")] = true;
+        }
+      }
+      return ret;
+    },
+    _replaceSelection(cm, active, startEnd, url) {
+      if(/editor-preview-active/.test(cm.getWrapperElement().lastChild.className))
+        return;
+
+      var text;
+      var start = startEnd[0];
+      var end = startEnd[1];
+      var startPoint = cm.getCursor("start");
+      var endPoint = cm.getCursor("end");
+      if(url) {
+        end = end.replace("#url#", url);
+      }
+      if(active) {
+        text = cm.getLine(startPoint.line);
+        start = text.slice(0, startPoint.ch);
+        end = text.slice(startPoint.ch);
+        cm.replaceRange(start + end, {
+          line: startPoint.line,
+          ch: 0
+        });
+      } else {
+        text = cm.getSelection();
+        cm.replaceSelection(start + text + end);
+
+        startPoint.ch += start.length;
+        if(startPoint !== endPoint) {
+          endPoint.ch += start.length;
+        }
+      }
+      cm.setSelection(startPoint, endPoint);
+      cm.focus();
+    },
     initialize() {
       const configs = {
         element: this.$el.firstElementChild,
@@ -112,7 +175,7 @@ export default {
           {
             name: "upload",
             action: (editor) => {
-              this.$emit('update:showUpload', true)
+              this.showUpload = true
               console.log('OK')
               return
               var cm = editor.codemirror;
@@ -130,19 +193,19 @@ export default {
             name: 'insertUrl',
             action: (editor) => {
               this.$dialog.prompt({
-                  message: 'Nhập URL để chèn',
-                  inputAttrs: {
-                      placeholder: 'http://blaysku.com',
-                      type: 'url'
-                  },
-                  onConfirm: (value) => {
-                    var cm = editor.codemirror;
-                    var output = '[](' + value + ')';
-                    var selectedText = cm.getSelection();
-                    var text = selectedText || 'placeholder';
-                    output = '[' + text + '](' + value + ')';
-                    cm.replaceSelection(output);
-                  }
+                message: 'Nhập URL để chèn',
+                confirmText: 'OK',
+                cancelText: 'Hủy',
+                inputAttrs: {
+                  placeholder: 'http://blaysku.com',
+                  type: 'url'
+                },
+                onConfirm: (value) => {
+                  let cm = editor.codemirror
+                  let stat = this.getState(cm)
+                  let options = editor.options
+                  this._replaceSelection(cm, stat.link, options.insertTexts.link, value)
+                }
               })
             },
             className: 'fa fa-link',
@@ -170,9 +233,6 @@ export default {
 
       // 绑定事件
       this.bindingEvents();
-    },
-    closeUpload() {
-      this.$emit('update:showUpload', false)
     },
     deleteDropFile(index) {
         this.dropFiles.splice(index, 1)

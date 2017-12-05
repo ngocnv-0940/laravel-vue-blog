@@ -117,7 +117,7 @@
         </div>
         <div class="navbar-item" v-if="!authenticated">
           <a class="button is-outlined"
-          :class="light ? 'is-light' : 'is-twitter'"
+          :class="light ? 'is-light' : 'is-primary'"
           @click="showLogin = true">
           <b-icon icon="sign-in" pack="fa"></b-icon> <span>Sign in</span>
         </a>
