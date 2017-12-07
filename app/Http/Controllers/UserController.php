@@ -3,11 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\Media;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    private $media;
+
+    public function __construct(Media $media)
+    {
+        $this->media = $media;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -100,8 +109,29 @@ class UserController extends Controller
         //
     }
 
-    public function uploadImage()
+    public function uploadImage(Request $request)
     {
-        //
+        abort_unless(auth()->check(), 403);
+        $request->validate([
+            'uploads' => 'required|array',
+            'uploads.*' => 'image',
+        ]);
+        try {
+            DB::beginTransaction();
+            foreach ($request->uploads as $upload) {
+                $uploaded[]['url'] = $this->media->upload($upload, 'user');
+            }
+            auth()->user()->media()->createMany($uploaded);
+            DB::commit();
+            return $uploaded;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+            DB::rollback();
+        }
+    }
+
+    public function media(User $user)
+    {
+        return $user->media()->paginate();
     }
 }

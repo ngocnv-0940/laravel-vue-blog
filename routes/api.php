@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('upload', 'UserController@uploadImage')->name('user.upload');
+Route::get('user/{user}/media', 'UserController@media')->name('user.media');
 Route::resource('user', 'UserController');
 Route::patch('post/status', 'PostController@changeStatus')->name('post.status');
 Route::resource('post', 'PostController');

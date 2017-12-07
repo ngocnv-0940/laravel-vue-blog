@@ -7,9 +7,12 @@
           <header class="modal-card-head">
             <p class="modal-card-title">Upload ảnh</p>
           </header>
-          <section class="modal-card-body">
+          <section class="modal-card-body has-text-centered">
             <b-field>
-              <b-upload v-model="dropFiles" multiple drag-drop>
+              <b-upload v-model="dropFiles"
+                accept="image/*"
+                :loading="uploading"
+                multiple drag-drop required>
                 <section class="section">
                   <div class="content has-text-centered">
                     <p><b-icon icon="upload" size="is-large"></b-icon></p>
@@ -18,7 +21,6 @@
                 </section>
               </b-upload>
             </b-field>
-
             <div class="tags">
               <span v-for="(file, index) in dropFiles" :key="index" class="tag is-primary">
                   {{ file.name }}
@@ -28,10 +30,19 @@
                   </button>
                 </span>
             </div>
+            <section>
+              <b-pagination
+                  total="100"
+                  current.sync="1"
+                  :simple="true"
+                  per-page="20">
+              </b-pagination>
+            </section>
           </section>
           <footer class="modal-card-foot">
             <button class="button" type="button" @click="showUpload = false">Hủy</button>
-            <!-- <button class="button is-primary" @click.prevent="emitUpload">Login</button> -->
+            <button class="button" type="button" @click="dropFiles = []">abb</button>
+            <button class="button is-primary" :disabled="!dropFiles.length" @click.prevent="upload">Tải lên</button>
           </footer>
         </div>
       </form>
@@ -40,14 +51,18 @@
 </template>
 
 <script>
-import SimpleMDE from 'simplemde';
-import marked from 'marked';
+import SimpleMDE from 'simplemde'
+import marked from 'marked'
+import axios from 'axios'
 
 export default {
   data() {
     return {
       dropFiles: [],
-      showUpload: false
+      showUpload: false,
+      uploading: false,
+      images: [],
+      current_page: 0,
     }
   },
   name: 'markdown-editor',
@@ -79,6 +94,9 @@ export default {
       },
     }
   },
+  created() {
+    this.fetchMedia()
+  },
   mounted() {
     if (this.autoinit) this.initialize();
   },
@@ -89,6 +107,21 @@ export default {
     if (isActive) editor.toggleFullScreen();
   },
   methods: {
+    async fetchMedia() {
+      let { data } = await axios.get(route('user.media', this.$store.getters.authUser.username))
+      console.log(data)
+    },
+    async upload() {
+      try {
+        this.uploading = true
+        let formData = new FormData()
+        this.dropFiles.forEach(file => formData.append('uploads[]', file))
+        let { data } = await axios.post(route('user.upload'), formData)
+        this.dropFiles = []
+      } finally {
+        this.uploading = false
+      }
+    },
     getState(cm, pos) {
       pos = pos || cm.getCursor("start");
       var stat = cm.getTokenAt(pos);
@@ -216,22 +249,17 @@ export default {
         ],
       };
       Object.assign(configs, this.configs);
-      // 判断是否开启代码高亮
       if (this.highlight) {
         configs.renderingConfig.codeSyntaxHighlighting = true;
       }
 
-      // 设置是否渲染输入的html
       marked.setOptions({ sanitize: this.sanitize });
 
-      // 实例化编辑器
       this.simplemde = new SimpleMDE(configs);
 
-      // 添加自定义 previewClass
       const className = this.previewClass || '';
       this.addPreviewClass(className);
 
-      // 绑定事件
       this.bindingEvents();
     },
     deleteDropFile(index) {
