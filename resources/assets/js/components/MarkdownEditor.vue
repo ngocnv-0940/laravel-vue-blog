@@ -31,11 +31,19 @@
                 </span>
             </div>
             <section>
+              <div class="columns is-multiline is-mobile">
+                <div class="column is-2" v-for="i in 12">
+                  <img src="https://bulma.io/images/placeholders/128x128.png" style="max-width: 80px">
+                </div>
+              </div>
+            </section>
+            <section>
               <b-pagination
-                  total="100"
-                  current.sync="1"
-                  :simple="true"
-                  per-page="20">
+                @change="fetchMedia"
+                :total="total"
+                :current.sync="current_page"
+                :simple="true"
+                :per-page="per_page">
               </b-pagination>
             </section>
           </section>
@@ -62,7 +70,9 @@ export default {
       showUpload: false,
       uploading: false,
       images: [],
-      current_page: 0,
+      current_page: 1,
+      per_page: 0,
+      total: 0
     }
   },
   name: 'markdown-editor',
@@ -107,9 +117,14 @@ export default {
     if (isActive) editor.toggleFullScreen();
   },
   methods: {
-    async fetchMedia() {
-      let { data } = await axios.get(route('user.media', this.$store.getters.authUser.username))
-      console.log(data)
+    async fetchMedia(page) {
+      console.log(page)
+      let { data: { data, total, per_page }} = await axios.get(route('user.media', this.$store.getters.authUser.username), {
+        params: { page: this.current_page }
+      })
+      this.per_page = per_page
+      this.images = data
+      this.total = total
     },
     async upload() {
       try {

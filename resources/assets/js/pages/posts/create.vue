@@ -11,17 +11,21 @@
         <b-field grouped>
             <b-field :type="form.errors.has('category_id') ? 'is-danger' : null"
                 :message="form.errors.get('category_id')">
-                <b-select placeholder="Chọn một chuyên mục" icon="folder" required v-model="form.category_id" required>
-                    <optgroup :label="category.name" v-for="category in categories">
-                        <option :value="childCat.id" v-for="childCat in category.childs">{{ childCat.name }}</option>
+                <b-select placeholder="Chọn một chuyên mục" icon="folder" required v-model="form.category_id">
+                    <optgroup :label="category.name" v-for="(category, index) in categories" :key="index">
+                        <option :value="childCat.id" v-for="childCat in category.childs" :key="childCat.id">{{ childCat.name }}</option>
                     </optgroup>
                 </b-select>
             </b-field>
             <b-field expanded
                 :type="form.errors.has('tags') ? 'is-danger' : null"
                 :message="form.errors.get('tags')">
-                <input-tag :tags="form.tags" placeholder="Tags"
-                    :class="{ 'error-field': form.errors.has('tags') }"></input-tag>
+                <b-taginput
+                    type="is-primary"
+                    v-model="form.tags"
+                    icon="tags"
+                    placeholder="Thêm tag">
+                </b-taginput>
             </b-field>
         </b-field>
         <b-field
