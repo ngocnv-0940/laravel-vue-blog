@@ -155,8 +155,7 @@ export default {
     ...mapActions('article', ['fetchArticle', 'updateArticle', 'likeOrUnlike', 'deleteArticle']),
     ...mapActions('comment', ['fetchComments']),
     async updateStatus() {
-      await axios.patch(route('post.status'), {
-        id: [ this.post.id ],
+      await axios.patch(route('post.status', this.post.slug), {
         value: !this.post.is_public
       })
       this.updateArticle({ is_public: !this.post.is_public })

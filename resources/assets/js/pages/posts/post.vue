@@ -2,7 +2,7 @@
   <article class="media">
     <figure class="media-left is-hidden-mobile">
       <p class="image is-128x128">
-        <img :src="post.image">
+        <img :src="post.thumb">
       </p>
     </figure>
     <div class="media-content">

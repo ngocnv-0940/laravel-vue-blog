@@ -40,7 +40,7 @@ axios.interceptors.response.use(response => response, error => {
 
       router.push({ name: 'login' })
     })
-  } else {
+  } else if (status >= 500) {
     Toast.open({
       message: i18n.t('error_alert_text'),
       type: 'is-danger'

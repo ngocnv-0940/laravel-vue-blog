@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 Route::post('upload', 'UserController@uploadImage')->name('user.upload');
 Route::get('user/{user}/media', 'UserController@media')->name('user.media');
 Route::resource('user', 'UserController');
-Route::patch('post/status', 'PostController@changeStatus')->name('post.status');
+Route::patch('post/status/{post?}', 'PostController@changeStatus')->name('post.status');
 Route::resource('post', 'PostController');
 Route::resource('category', 'CategoryController');
 Route::resource('tag', 'TagController');

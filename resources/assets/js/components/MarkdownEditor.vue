@@ -32,8 +32,8 @@
             </div>
             <section>
               <div class="columns is-multiline is-mobile">
-                <div class="column is-2" v-for="i in 12">
-                  <img src="https://bulma.io/images/placeholders/128x128.png" style="max-width: 80px">
+                <div class="column is-2" v-for="image in images" :key="image.id">
+                  <img :src="image.thumb" class="image-thumb" alt="image" @click="selectImage(image.url)">
                 </div>
               </div>
             </section>
@@ -49,7 +49,7 @@
           </section>
           <footer class="modal-card-foot">
             <button class="button" type="button" @click="showUpload = false">Hủy</button>
-            <button class="button" type="button" @click="dropFiles = []">abb</button>
+            <button class="button" type="button" v-show="dropFiles.length" @click="dropFiles = []">Xóa ảnh đã chọn</button>
             <button class="button is-primary" :disabled="!dropFiles.length" @click.prevent="upload">Tải lên</button>
           </footer>
         </div>
@@ -75,7 +75,9 @@ export default {
       total: 0
     }
   },
+
   name: 'markdown-editor',
+
   props: {
     value: String,
     previewClass: String,
@@ -104,24 +106,28 @@ export default {
       },
     }
   },
+
   created() {
-    this.fetchMedia()
+    this.fetchMedia(this.current_page)
   },
+
   mounted() {
     if (this.autoinit) this.initialize();
   },
+
   activated() {
     const editor = this.simplemde;
     if (!editor) return;
     const isActive = editor.isSideBySideActive() || editor.isPreviewActive();
     if (isActive) editor.toggleFullScreen();
   },
+
   methods: {
     async fetchMedia(page) {
-      console.log(page)
-      let { data: { data, total, per_page }} = await axios.get(route('user.media', this.$store.getters.authUser.username), {
-        params: { page: this.current_page }
+      let { data: { data, meta: { total, per_page, current_page }}} = await axios.get(route('user.media', this.$store.getters.authUser.username), {
+        params: { page: page }
       })
+      this.current_page = current_page
       this.per_page = per_page
       this.images = data
       this.total = total
@@ -133,49 +139,18 @@ export default {
         this.dropFiles.forEach(file => formData.append('uploads[]', file))
         let { data } = await axios.post(route('user.upload'), formData)
         this.dropFiles = []
+        this.fetchMedia()
       } finally {
         this.uploading = false
       }
     },
-    getState(cm, pos) {
-      pos = pos || cm.getCursor("start");
-      var stat = cm.getTokenAt(pos);
-      if(!stat.type) return {};
-
-      var types = stat.type.split(" ");
-
-      var ret = {},
-        data, text;
-      for(var i = 0; i < types.length; i++) {
-        data = types[i];
-        if(data === "strong") {
-          ret.bold = true;
-        } else if(data === "variable-2") {
-          text = cm.getLine(pos.line);
-          if(/^\s*\d+\.\s/.test(text)) {
-            ret["ordered-list"] = true;
-          } else {
-            ret["unordered-list"] = true;
-          }
-        } else if(data === "atom") {
-          ret.quote = true;
-        } else if(data === "em") {
-          ret.italic = true;
-        } else if(data === "quote") {
-          ret.quote = true;
-        } else if(data === "strikethrough") {
-          ret.strikethrough = true;
-        } else if(data === "comment") {
-          ret.code = true;
-        } else if(data === "link") {
-          ret.link = true;
-        } else if(data === "tag") {
-          ret.image = true;
-        } else if(data.match(/^header(\-[1-6])?$/)) {
-          ret[data.replace("header", "heading")] = true;
-        }
-      }
-      return ret;
+    selectImage(image) {
+      console.log(image)
+      const editor = this.simplemde
+      var cm = editor.codemirror;
+      let options = ['![', '](#url#)']
+      this._replaceSelection(cm, null, options, image)
+      this.showUpload = false
     },
     _replaceSelection(cm, active, startEnd, url) {
       if(/editor-preview-active/.test(cm.getWrapperElement().lastChild.className))
@@ -224,15 +199,6 @@ export default {
             name: "upload",
             action: (editor) => {
               this.showUpload = true
-              console.log('OK')
-              return
-              var cm = editor.codemirror;
-              var output = '';
-              var selectedText = cm.getSelection();
-              var text = selectedText || 'placeholder';
-
-              output = '!!' + text + '!!';
-              cm.replaceSelection(output);
             },
             className: "fa fa-image",
             title: "Upload ảnh"
@@ -245,14 +211,13 @@ export default {
                 confirmText: 'OK',
                 cancelText: 'Hủy',
                 inputAttrs: {
-                  placeholder: 'http://blaysku.com',
+                  placeholder: 'http://nguyenvanngoc.com',
                   type: 'url'
                 },
                 onConfirm: (value) => {
                   let cm = editor.codemirror
-                  let stat = this.getState(cm)
                   let options = editor.options
-                  this._replaceSelection(cm, stat.link, options.insertTexts.link, value)
+                  this._replaceSelection(cm, null, options.insertTexts.link, value)
                 }
               })
             },
@@ -316,5 +281,13 @@ export default {
 
 .editor-toolbar.fullscreen {
   z-index: 99;
+}
+
+.image-thumb {
+  max-width: 80px;
+  cursor: pointer;
+}
+.image-thumb:hover {
+  opacity: 0.8;
 }
 </style>

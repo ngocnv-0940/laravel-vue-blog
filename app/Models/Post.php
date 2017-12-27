@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Media;
 use App\Traits\Draft;
 use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Model;
@@ -10,9 +11,9 @@ class Post extends Model
 {
     use Likeable, Draft;
 
-    const DEFAULT_IMAGE = 'https://bulma.io/images/placeholders/640x480.png';
-
     protected $guarded = [];
+
+    protected $appends = ['thumb'];
 
     /**
      * Get the route key for the model.
@@ -26,7 +27,12 @@ class Post extends Model
 
     public function getImageAttribute($image)
     {
-        return $image ?? self::DEFAULT_IMAGE;
+        return $image ?? Media::url(Media::NO_IMAGE_URL);
+    }
+
+    public function getThumbAttribute()
+    {
+        return Media::thumb($this->image);
     }
 
     public function author()

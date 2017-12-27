@@ -10,14 +10,16 @@ use Image;
 
 class Media extends Model
 {
+    const NO_IMAGE_URL = 'images/no_image.png';
+
     protected $fillable = ['url', 'is_local'];
 
     public static function upload(UploadedFile $file, $path = null)
     {
         $image = Storage::put($path, $file);
 
-        Image::make($file)->resize(128, null, function ($constraint) {
-            $constraint->aspectRatio();
+        Image::make($file)->fit(128, 128, function ($constraint) {
+            $constraint->upsize();
         })->save(public_path('uploads') . '/' . static::getThumb($image));
 
         return $image;
@@ -44,11 +46,24 @@ class Media extends Model
 
     public static function url($target)
     {
-        return Storage::url($target);
+        return Storage::exists($target) ? Storage::url($target) : Storage::url(self::NO_IMAGE_URL);
     }
 
     public static function thumb($target)
     {
-        return Storage::url(static::getThumb($target));
+        $isUrl = str_contains($target, ['http://', 'https://']);
+        $isLocal = str_contains($target, Storage::url('/'));
+
+        if ($isUrl) {
+            if (!$isLocal) {
+                return $target;
+            }
+
+            $target = str_after($target, Storage::url('/'));
+        }
+
+        return Storage::exists($target)
+            ? Storage::url(static::getThumb($target))
+            : Storage::url(static::getThumb(self::NO_IMAGE_URL));
     }
 }

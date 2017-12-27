@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MediaResource;
 use App\Http\Resources\UserResource;
 use App\Models\Media;
 use App\Models\User;
@@ -71,7 +72,7 @@ class UserController extends Controller
 
         return [
             'posts' => $posts->latest()->paginate(),
-            'user' => new UserResource($user)
+            'user' => new UserResource($user),
         ];
     }
 
@@ -132,6 +133,6 @@ class UserController extends Controller
 
     public function media(User $user)
     {
-        return $user->media()->paginate();
+        return MediaResource::collection($user->media()->latest()->paginate(12));
     }
 }

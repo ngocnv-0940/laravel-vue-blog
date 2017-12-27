@@ -53,7 +53,6 @@
 </template>
 <script>
 import MarkdownEditor from '~/components/MarkdownEditor'
-import InputTag from 'vue-input-tag'
 import axios from 'axios'
 import Form from 'vform'
 import stripmd from '~/helpers/stripmd.js'
@@ -80,12 +79,17 @@ export default {
       this.form.is_public = isPublic
       this.form.excerpt = this.getExcerpt(this.form.content, 155)
       this.form.meta_keywords = this.form.tags.toString()
+      this.form.image = this.getImageFromContent(this.form.content)
       let { data: { slug, is_public }} = await this.form.patch(route('post.update', this.slug))
       this.$router.push({ name: 'post.show', params: { slug }})
       let notify = is_public ?
         'Bài viết của bạn đã được đăng/cập nhật thành công!' :
         'Lưu nháp/cập nhật thành công!'
       this.$snackbar.open(notify)
+    },
+    getImageFromContent(content) {
+      let regex = /!\[.*?\]\((.*?)\)/
+      return content.match(regex) ? content.match(regex)[1] : null
     },
     getExcerpt (content, maxLength) {
       let stripped = stripmd(content.trim()).replace(/(\r\n|\n|\r)/gm,' ')
@@ -107,26 +111,12 @@ export default {
     this.fetchPost()
   },
   components: {
-    MarkdownEditor,
-    InputTag
+    MarkdownEditor
   }
 }
 </script>
 <style>
   @import '~simplemde/dist/simplemde.min.css';
-  /*vue input tag*/
-  .vue-input-tag-wrapper {
-    border-radius: .25em;
-    border-color: #d8d5d5 !important;
-  }
-  .vue-input-tag-wrapper .input-tag {
-    /*background-color: ;*/
-    /*border-color: #4267B2 !important;*/
-    /*color: #4267B2;*/
-  }
-  .vue-input-tag-wrapper .new-tag {
-    margin-left: 0.5em;
-  }
   /*editor error*/
   .error-field {
     border: 1px solid transparent !important;
