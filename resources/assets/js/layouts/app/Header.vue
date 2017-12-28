@@ -28,24 +28,6 @@
       <div class="navbar-menu" :class="{ 'is-active': isMenuActive }">
         <div class="navbar-start">
           <router-link :to="{ name: 'post.list' }" class="navbar-item">Tin tức</router-link>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link" href="#">
-              Docs
-            </a>
-            <div class="navbar-dropdown is-boxed">
-              <a class="navbar-item" href="#">
-                Overview
-              </a>
-              <a class="navbar-item" href="#">
-                Modifiers
-              </a>
-              <hr class="navbar-divider">
-              <a class="navbar-item" href="#">
-                Elements
-              </a>
-            </div>
-          </div>
-
           <div class="navbar-item has-dropdown is-hoverable is-mega">
             <div class="navbar-link" :class="{ 'is-active': $route.name == 'post.category' }">
               Chuyên mục
@@ -76,16 +58,16 @@
                   <div class="level is-mobile">
                     <div class="level-left">
                       <div class="level-item">
-                        <strong>Stay up to date!</strong>
+                        <strong>Tất cả chuyên mục</strong>
                       </div>
                     </div>
                     <div class="level-right">
                       <div class="level-item">
-                        <a class="button bd-is-rss is-small" href="http://bulma.io/atom.xml">
+                        <a class="button bd-is-rss is-small" href="#">
                           <span class="icon is-small">
                             <i class="fa fa-rss"></i>
                           </span>
-                          <span>Subscribe</span>
+                          <span>Hello world</span>
                         </a>
                       </div>
                     </div>
@@ -119,7 +101,7 @@
           <a class="button is-outlined"
           :class="light ? 'is-light' : 'is-primary'"
           @click="showLogin = true">
-          <b-icon icon="sign-in" pack="fa"></b-icon> <span>Sign in</span>
+          <b-icon icon="sign-in" pack="fa"></b-icon> <span>Đăng nhập</span>
         </a>
       </div>
       <div class="navbar-item has-dropdown is-hoverable" v-else>

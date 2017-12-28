@@ -1,7 +1,5 @@
 {
   "plugins": [
-    "transform-runtime",
-    "transform-async-to-generator",
     "babel-plugin-syntax-dynamic-import"
   ]
 }

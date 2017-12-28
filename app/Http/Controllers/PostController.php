@@ -134,7 +134,7 @@ class PostController extends Controller
     {
         $data = $request->validate([
             'id' => 'array|nullable',
-            'value' => 'required|boolean'
+            'value' => 'required|boolean',
         ]);
 
         if (isset($post)) {
