@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
-use Illuminate\Database\Query\oldest;
+use App\Notifications\CommentNotify;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -78,15 +78,19 @@ class CommentController extends Controller
             $model = self::MODEL_PATH . studly_case(array_get($array, 'type', 'Post'));
             $modelInstance = app($model)->whereSlug($array['slug'])->firstOrFail();
 
-            return new CommentResource($modelInstance
-                ->comments()
-                ->create(
-                    array_merge(
-                        array_only($array, ['parent_id', 'message']),
-                        ['user_id' => auth()->id()])
+            $comment = $modelInstance->comments()->create(
+                array_merge(
+                    array_only($array, ['parent_id', 'message']),
+                    ['user_id' => auth()->id()]
                 )
-                ->load(['user'])
             );
+
+            $modelInstance->author->notify(new CommentNotify($comment));
+            if ($comment->parent) {
+                $comment->parent->user->notify(new CommentNotify($comment, true));
+            }
+
+            return new CommentResource($comment->load(['user']));
         }
         abort(500, 'Please login to do this action');
     }
