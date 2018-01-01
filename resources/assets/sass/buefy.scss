@@ -44,10 +44,15 @@ $container-offset: 140px;
 @media screen and (min-width: 1024px) {
   .navbar-noty {
     width: 25rem;
-    .navbar-item {
-      white-space: normal;
-      text-align: justify;
-      padding-right: 1rem !important;
+    .noti-contents {
+      overflow-y: auto;
+      max-height: 30rem;
+    }
+    .noti-content {
+      white-space: nowrap;
+      max-width: 22.5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }

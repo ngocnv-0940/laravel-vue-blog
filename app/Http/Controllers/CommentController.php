@@ -85,9 +85,10 @@ class CommentController extends Controller
                 )
             );
 
-            $modelInstance->author->notify(new CommentNotify($comment));
+            $modelInstance->author->notify(new CommentNotify($comment, auth()->user()));
+
             if ($comment->parent) {
-                $comment->parent->user->notify((new CommentNotify($comment, true))->delay(now()->addSecond(5)));
+                $comment->parent->user->notify(new CommentNotify($comment, auth()->user(), true));
             }
 
             return new CommentResource($comment->load(['user']));

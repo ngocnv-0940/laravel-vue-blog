@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notification;
 class CommentNotify extends Notification implements ShouldQueue
 {
     private $comment;
+    private $user;
     private $isReply;
 
     use Queueable;
@@ -20,9 +21,10 @@ class CommentNotify extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($comment, bool $isReply = false)
+    public function __construct($comment, $user, bool $isReply = false)
     {
         $this->comment = $comment;
+        $this->user = $user;
         $this->isReply = $isReply;
     }
 
@@ -46,9 +48,11 @@ class CommentNotify extends Notification implements ShouldQueue
     public function toDatabase($notifiable)
     {
         return [
-            'post' => $this->comment->commentable->title,
-            'user' => $this->comment->user->name,
-            'isReply' => $this->isReply,
+            'html' => $this->getTitle(),
+            'text' => strip_tags($this->getTitle()),
+            'slug' => $this->comment->commentable->slug,
+            'type' => snake_case(class_basename($this->comment->commentable_type)),
+            'created_at' => (string) $this->comment->created_at,
         ];
     }
 
@@ -61,9 +65,21 @@ class CommentNotify extends Notification implements ShouldQueue
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'post' => $this->comment->commentable->title,
-            'user' => $this->comment->user->name,
-            'isReply' => $this->isReply,
+            'html' => $this->getTitle(),
+            'text' => strip_tags($this->getTitle()),
+            'slug' => route('post.show', $this->comment->commentable->slug),
+            'type' => snake_case(class_basename($this->comment->commentable_type)),
+            'created_at' => (string) $this->comment->created_at,
         ]);
     }
+
+    // Hung comment on your post Post name
+    // Hung reply your commnent on Post name
+    private function getTitle()
+    {
+        return $this->isReply
+            ? '<b>' . $this->user->name . '</b> đã trả lời bình luận của bạn trong <b>' . $this->comment->commentable->title . '</b>'
+            : '<b>' . $this->user->name . '</b> đã bình luận trong <b>' . $this->comment->commentable->title . '</b>';
+    }
+
 }

@@ -58,14 +58,4 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->morphMany(Media::class, 'mediable');
     }
-
-    /**
-     * The channels the user receives notification broadcasts on.
-     *
-     * @return string
-     */
-    public function receivesBroadcastNotificationsOn()
-    {
-        return 'users.' . $this->id;
-    }
 }

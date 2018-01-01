@@ -12,9 +12,11 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('upload', 'UserController@uploadImage')->name('user.upload');
-Route::get('user/{user}/media', 'UserController@media')->name('user.media');
+Route::post('upload', 'UserController@uploadImage')->name('user.upload')->middleware('auth');
+Route::get('user/{user}/media', 'UserController@media')->name('user.media')->middleware('auth');
+Route::get('notifications', 'UserController@notifications')->name('user.notifications')->middleware('auth');
 Route::resource('user', 'UserController');
+
 Route::patch('post/status/{post?}', 'PostController@changeStatus')->name('post.status');
 Route::resource('post', 'PostController');
 Route::resource('category', 'CategoryController');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\MediaResource;
+use App\Http\Resources\NotificationResource;
 use App\Http\Resources\UserResource;
 use App\Models\Media;
 use App\Models\User;
@@ -12,10 +13,12 @@ use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
     private $media;
+    private $user;
 
     public function __construct(Media $media)
     {
         $this->media = $media;
+        $this->user = auth()->user();
     }
 
     /**
@@ -122,7 +125,7 @@ class UserController extends Controller
             foreach ($request->uploads as $upload) {
                 $uploaded[]['url'] = $this->media->upload($upload, 'user');
             }
-            auth()->user()->media()->createMany($uploaded);
+            $this->user->media()->createMany($uploaded);
             DB::commit();
             return $uploaded;
         } catch (\Exception $e) {
@@ -134,5 +137,11 @@ class UserController extends Controller
     public function media(User $user)
     {
         return MediaResource::collection($user->media()->latest()->paginate(12));
+    }
+
+    public function notifications()
+    {
+        // return NotificationResource::collection($this->user->notifications()->paginate(10));
+        return new \App\Http\Resources\NotificationCollection($this->user->notifications()->paginate(10));
     }
 }

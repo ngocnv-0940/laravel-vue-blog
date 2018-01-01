@@ -107,23 +107,21 @@
                 <router-link :to="{ name: 'user.show', params: { username: user.username }}" exact class="navbar-item">Trang cá nhân</router-link>
                 <a class="navbar-item" @click.prevent="logout">Đăng xuất</a>
                 <hr class="navbar-divider">
-                <strong class="navbar-item has-text-grey">NgocBlog v1.0.0</strong>
+                <strong class="navbar-item has-text-grey">NgocBlog beta1</strong>
               </div>
             </div>
           </template>
 
-          <template v-else>
-            <div class="navbar-item">
-              <a class="button is-outlined"
-                :class="light ? 'is-light' : 'is-primary'"
-                @click="showLogin = true">
-                <b-icon icon="sign-in" pack="fa"></b-icon> <span>Đăng nhập</span>
-              </a>
-            </div>
-            <b-modal :active.sync="showLogin" has-modal-card>
-              <login-form></login-form>
-            </b-modal>
-          </template>
+          <div class="navbar-item" v-else>
+            <a class="button is-outlined"
+              :class="light ? 'is-light' : 'is-primary'"
+              @click="showLogin = true">
+              <b-icon icon="sign-in" pack="fa"></b-icon> <span>Đăng nhập</span>
+            </a>
+          </div>
+          <b-modal :active.sync="showLogin" has-modal-card>
+            <login-form></login-form>
+          </b-modal>
         </div>
   </div>
 </div>
