@@ -1,6 +1,6 @@
 <template>
   <section>
-    <header class="navbar is-transparent is-fixed-top">
+    <header class="navbar is-fixed-top">
       <div class="container">
         <div class="navbar-brand">
           <router-link to="/" exact class="navbar-item" title="Just a blog">
@@ -28,11 +28,12 @@
       <div class="navbar-menu" :class="{ 'is-active': isMenuActive }">
         <div class="navbar-start">
           <router-link :to="{ name: 'post.list' }" class="navbar-item">Tin tức</router-link>
+
           <div class="navbar-item has-dropdown is-hoverable is-mega">
             <div class="navbar-link" :class="{ 'is-active': $route.name == 'post.category' }">
               Chuyên mục
             </div>
-            <div id="blogDropdown" class="navbar-dropdown" data-style="width: 18rem;">
+            <div class="navbar-dropdown">
               <div class="container is-fluid">
                 <div class="columns">
                   <div class="column" v-for="category in categories" :key="category.slug">
@@ -44,14 +45,13 @@
                       <div class="navbar-content">
                         <p>{{ child.name }}</p>
                         <p>
-                          <small class="has-text-info">03 posts</small>
+                          <small class="has-text-primary">03 posts</small>
                         </p>
                       </div>
                     </router-link>
                   </div>
                 </div>
               </div>
-
               <hr class="navbar-divider">
               <div class="navbar-item">
                 <div class="navbar-content">
@@ -76,47 +76,55 @@
               </div>
             </div>
           </div>
-
         </div>
+
         <div class="navbar-end">
           <div class="navbar-item">
             <b-field>
               <b-input placeholder="Tìm kiếm..."
-              type="search"
-              icon="search">
-            </b-input>
-          </b-field>
+                type="search"
+                icon="search">
+              </b-input>
+            </b-field>
+          </div>
+          <template v-if="authenticated">
+            <div class="navbar-item">
+              <b-field>
+                <router-link :to="{ name: 'post.create' }" class="button is-primary is-outlined">
+                  <span class="icon">
+                    <b-icon icon="pencil"></b-icon>
+                  </span>
+                  <span>Đăng bài</span>
+                </router-link>
+              </b-field>
+            </div>
+
+            <notification></notification>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+              <router-link :to="{ name: 'user.show', params: { username: user.username }}" exact class="navbar-link">{{ user.username }}!</router-link>
+              <div class="navbar-dropdown">
+                <router-link :to="{ name: 'user.show', params: { username: user.username }}" exact class="navbar-item">Trang cá nhân</router-link>
+                <a class="navbar-item" @click.prevent="logout">Đăng xuất</a>
+                <hr class="navbar-divider">
+                <strong class="navbar-item has-text-grey">NgocBlog v1.0.0</strong>
+              </div>
+            </div>
+          </template>
+
+          <template v-else>
+            <div class="navbar-item">
+              <a class="button is-outlined"
+                :class="light ? 'is-light' : 'is-primary'"
+                @click="showLogin = true">
+                <b-icon icon="sign-in" pack="fa"></b-icon> <span>Đăng nhập</span>
+              </a>
+            </div>
+            <b-modal :active.sync="showLogin" has-modal-card>
+              <login-form></login-form>
+            </b-modal>
+          </template>
         </div>
-        <div class="navbar-item" v-if="authenticated">
-          <b-field>
-            <router-link :to="{ name: 'post.create' }" class="button is-primary is-outlined">
-              <span class="icon">
-                <b-icon icon="pencil"></b-icon>
-              </span>
-              <span>Đăng bài</span>
-            </router-link>
-          </b-field>
-        </div>
-        <div class="navbar-item" v-if="!authenticated">
-          <a class="button is-outlined"
-          :class="light ? 'is-light' : 'is-primary'"
-          @click="showLogin = true">
-          <b-icon icon="sign-in" pack="fa"></b-icon> <span>Đăng nhập</span>
-        </a>
-      </div>
-      <div class="navbar-item has-dropdown is-hoverable" v-else>
-        <router-link :to="{ name: 'user.show', params: { username: user.username }}" exact class="navbar-link">Chào {{ user.name }}!</router-link>
-        <div class="navbar-dropdown is-boxed">
-          <router-link :to="{ name: 'user.show', params: { username: user.username }}" exact class="navbar-item">Trang cá nhân</router-link>
-          <a class="navbar-item" @click.prevent="logout">Đăng xuất</a>
-          <hr class="navbar-divider">
-          <strong class="navbar-item has-text-grey">NgocBlog v1.0.0</strong>
-        </div>
-      </div>
-      <b-modal :active.sync="showLogin" has-modal-card>
-        <login-form></login-form>
-      </b-modal>
-    </div>
   </div>
 </div>
 </header>
@@ -159,6 +167,7 @@ import axios from 'axios'
 import { mapGetters, mapState } from 'vuex'
 import tabs from './tabs.js'
 import LoginForm from '~/pages/auth/LoginForm'
+import Notification from '~/components/Notification'
 
 export default {
   props: {
@@ -196,14 +205,9 @@ export default {
   created() {
     this.$store.dispatch('getCategories')
   },
-  // beforeUpdate(to, from, next) {
-  //   console.log(123)
-  //   this.$refs.header.isMenuActive = false
-  //   this.currentTab = to.meta.category
-  //   next()
-  // },
   components: {
-    LoginForm
+    LoginForm,
+    Notification
   }
 }
 </script>

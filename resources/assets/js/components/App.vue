@@ -46,11 +46,6 @@ export default {
 
   mounted () {
     this.$loading = this.$refs.loading
-    console.log(123)
-    Echo.private('users.1')
-      .notification((notification) => {
-        console.log(notification);
-      });
   },
 
   methods: {

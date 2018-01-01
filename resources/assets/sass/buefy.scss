@@ -1,6 +1,6 @@
 @import "~bulma/sass/utilities/_all";
 @import "~buefy/src/scss/utils/_variables";
-$gap: 120px;
+// $gap: 120px;
 // Colors
 $twitter: #4099FF;
 $twitter-invert: findColorInvert($twitter);
@@ -36,11 +36,26 @@ $container-offset: 140px;
 
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
-
+@import "~bulma-badge";
 @import "~highlight.js/styles/atelier-cave-light.css";
 
 
 // Helpers
+@media screen and (min-width: 1024px) {
+  .navbar-noty {
+    width: 25rem;
+    .navbar-item {
+      white-space: normal;
+      text-align: justify;
+      padding-right: 1rem !important;
+    }
+  }
+}
+
+.is-poiter {
+  cursor: pointer;
+}
+
 .right-sidebar {
   border-left: 1px solid rgba($border, 0.5);
   padding-left: 1em;

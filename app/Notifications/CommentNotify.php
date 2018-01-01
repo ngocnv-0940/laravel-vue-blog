@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class CommentNotify extends Notification
+class CommentNotify extends Notification implements ShouldQueue
 {
     private $comment;
     private $isReply;
