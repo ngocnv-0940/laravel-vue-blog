@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\MediaResource;
+use App\Http\Resources\NotificationCollection;
 use App\Http\Resources\NotificationResource;
 use App\Http\Resources\UserResource;
 use App\Models\Media;
@@ -141,7 +142,22 @@ class UserController extends Controller
 
     public function notifications()
     {
-        // return NotificationResource::collection($this->user->notifications()->paginate(10));
-        return new \App\Http\Resources\NotificationCollection($this->user->notifications()->paginate(10));
+        return new NotificationCollection($this->user->notifications()->paginate(10));
+    }
+
+    public function readNotifications(Request $request)
+    {
+        try {
+            $request->validate([
+                'notifications' => 'required|array',
+            ]);
+
+            $this->user->notifications()->whereIn('id', $request->notifications)->update(['read_at' => now()]);
+
+            return ['status' => true];
+        } catch (\Exception $e) {
+            return $e->getMessage();
+            return ['status' => false];
+        }
     }
 }

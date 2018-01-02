@@ -12,11 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('upload', 'UserController@uploadImage')->name('user.upload')->middleware('auth');
-Route::get('user/{user}/media', 'UserController@media')->name('user.media')->middleware('auth');
-Route::get('notifications', 'UserController@notifications')->name('user.notifications')->middleware('auth');
 Route::resource('user', 'UserController');
-
 Route::patch('post/status/{post?}', 'PostController@changeStatus')->name('post.status');
 Route::resource('post', 'PostController');
 Route::resource('category', 'CategoryController');
@@ -26,6 +22,12 @@ Route::patch('like/{slug}/toggle', 'LikeController@likeOrUnlike')->name('like.to
 Route::resource('like', 'LikeController');
 
 Route::group(['middleware' => 'auth:api'], function () {
+    Route::post('upload', 'UserController@uploadImage')->name('user.upload');
+    Route::get('user/{user}/media', 'UserController@media')->name('user.media');
+
+    Route::patch('notifications/read', 'UserController@readNotifications')->name('user.read-noti');
+    Route::get('notifications', 'UserController@notifications')->name('user.notifications');
+
     Route::post('logout', 'Auth\LoginController@logout');
 
     Route::get('/user', function (Request $request) {

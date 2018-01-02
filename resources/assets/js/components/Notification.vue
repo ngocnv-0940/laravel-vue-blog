@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-item has-dropdown is-hoverable">
+  <div class="navbar-item has-dropdown is-hoverable is-active">
     <a class="navbar-item">
       <b-icon
         class="badge"
@@ -12,6 +12,8 @@
       <div class="noti-contents">
         <template v-for="noti in notifications">
           <router-link class="navbar-item"
+            :class="{ 'noti-unread': !noti.is_read }"
+            @click.native="markAsRead(noti)"
             exactActiveClass=""
             :to="{ name: noti.data.type + '.show', params: { slug: noti.data.slug }}">
             <b-tooltip
@@ -34,6 +36,10 @@
           </router-link>
           <hr class="navbar-divider">
         </template>
+
+        <p class="has-text-centered" v-show="isLoading">
+          <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i>
+        </p>
       </div>
 
       <div class="navbar-item">
@@ -48,7 +54,7 @@
               <div class="level-item">
                 <a class="button bd-is-rss is-small" href="#">
                   <span class="icon is-small">
-                    <i class="fa fa-rss"></i>
+                    <i class="fa fa-bell-o"></i>
                   </span>
                   <span>Tất cả thông báo</span>
                 </a>
@@ -68,20 +74,50 @@
       return {
         notifications: [],
         unread_count: 0,
+        current_page: 0,
+        hasMoreData: true,
+        isLoading: false,
       }
     },
     methods: {
       async getNotifications() {
-        let { data: { data, unread_count }} = await axios.get(route('user.notifications'))
-        this.notifications = data
-        this.unread_count = unread_count
+        if (!this.hasMoreData) return
+        this.isLoading = true
+        this.current_page++
+        let { data } = await axios.get(route('user.notifications'), { params: { page: this.current_page }})
+        this.notifications = [...this.notifications, ...data.data ]
+        this.unread_count = data.unread_count
+        if (data.meta.last_page <= this.current_page)
+          this.hasMoreData = false
+        this.isLoading = false
+      },
+      async markAsRead(notification) {
+        if (notification.is_read) return
+        let { data } = await axios.patch(route('user.read-noti'), { notifications: [notification.id]})
+        if (data.status) {
+          notification.is_read = true
+          this.unread_count--
+        } else {
+          this.$toast.open({
+            message: 'Đã có lỗi xảy ra!',
+            type: 'is-danger'
+          })
+        }
       }
     },
     created() {
       this.getNotifications()
     },
     mounted() {
-      console.log(this.$store.getters.authUser.id)
+      if (this.hasMoreData) {
+        $('.noti-contents').scroll((e) => {
+          const _self = $(e.currentTarget)
+          if (_self.scrollTop() + _self.innerHeight() == _self[0].scrollHeight) {
+            this.getNotifications()
+          }
+        })
+      }
+
       Echo.private('App.Models.User.' + this.$store.getters.authUser.id)
         .notification((notification) => {
           console.log(notification);
