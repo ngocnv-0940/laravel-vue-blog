@@ -96,7 +96,7 @@
         <div class="field">
           <p class="control">
             <textarea class="textarea"
-              placeholder="Nhập bình luận..."
+              placeholder="Nhập bình luận, Ctrl + Enter để gửi..."
               :class="{ 'is-danger': form.errors.has('message') && !form.parent_id }"
               rows="2"
               @keyup.ctrl.enter.prevent="sendComment($event, true)">

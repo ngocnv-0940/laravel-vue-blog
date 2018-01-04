@@ -43,7 +43,6 @@ export default [
 
   // Authenticated routes.
   ...middleware('auth', [
-    { path: '/home', name: 'home', component: require('~/pages/home') },
     { path: '/settings', component: require('~/pages/settings/index'), children: [
       { path: '', redirect: { name: 'settings.profile' }},
       { path: 'profile', name: 'settings.profile', component: require('~/pages/settings/profile') },

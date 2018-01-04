@@ -65,7 +65,7 @@
               })
 
               // Redirect home.
-              // this.$router.push({ name: 'home' })
+              // this.$router.push({ name: 'welcome' })
             },
             closeModal() {
                 this.$emit('closeModal')

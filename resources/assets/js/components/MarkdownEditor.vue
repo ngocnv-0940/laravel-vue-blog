@@ -145,7 +145,6 @@ export default {
       }
     },
     selectImage(image) {
-      console.log(image)
       const editor = this.simplemde
       var cm = editor.codemirror;
       let options = ['![', '](#url#)']
