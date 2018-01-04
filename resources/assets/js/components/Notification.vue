@@ -22,7 +22,7 @@
             </div>
             <div class="level-right">
               <div class="level-item">
-                <a @click.prevent="markAllAsRead" href="#">
+                <a @click.prevent="markAllAsRead" href="#" >
                   <small>Đánh dấu tất cả là đã đọc</small>
                 </a>
                 <small>&nbsp;·&nbsp;</small>
@@ -35,7 +35,10 @@
         </div>
       </div>
       <div class="noti-contents">
-        <template v-for="noti in notifications">
+        <div class="navbar-content has-text-centered" v-if="!notifications.length">
+            <p class="noti-nothing"><strong>Không có thông báo nào!</strong></p>
+        </div>
+        <template v-for="noti in notifications" v-else>
           <router-link class="navbar-item"
             :class="{ 'noti-unread': !noti.is_read }"
             @click.native="markAsRead(noti)"

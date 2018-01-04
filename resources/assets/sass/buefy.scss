@@ -54,18 +54,23 @@ $container-offset: 140px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .noti-unread {
-      background-color: #f5fffaba;
-    }
-    .navbar-divider {
-      margin: 0;
-    }
-    .noti-header {
-      border-bottom: solid 1px #dbdbdb;
-    }
-    .noti-footer {
-      border-top: solid 1px #dbdbdb;
-    }
+  }
+}
+.navbar-noty {
+  .noti-unread {
+    background-color: #f5fffaba;
+  }
+  .navbar-divider {
+    margin: 0;
+  }
+  .noti-header {
+    border-bottom: solid 1px #dbdbdb;
+  }
+  .noti-footer {
+    border-top: solid 1px #dbdbdb;
+  }
+  .noti-nothing {
+    margin: 1em 0;
   }
 }
 
