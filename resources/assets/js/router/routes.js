@@ -31,14 +31,14 @@ export default [
   {
     path: '/post/featured/:page(\\d+)?', name: 'post.featured', component: PostIndex,
     props: { params: { scope: 'featured' }},
-    meta: { scrollToTop: true, tab: 'post' }
+    meta: { tab: 'post' }
   },
   {
     path: '/post/:page(\\d+)?', name: 'post.list', component: PostIndex,
-    meta: { scrollToTop: true, tab: 'post' }
+    meta: { tab: 'post' }
   },
   { path: '/post/:slug', name: 'post.show', component: PostShow,
-    meta: { scrollToTop: true, tab: 'post' }
+    meta: { tab: 'post' }
   },
 
   // Authenticated routes.

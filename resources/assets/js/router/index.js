@@ -84,7 +84,7 @@ function make () {
 
   // Register before resolve guard
   router.beforeResolve((to, from, next) => {
-    setLayout(router, to)
+    setLayout(to)
     next()
   })
 
@@ -101,10 +101,9 @@ function make () {
 /**
  * Set the application layout from the matched page component.
  *
- * @param {Router} router
  * @param {Route} to
  */
-function setLayout (router, to) {
+function setLayout (to) {
   // Get the first matched component.
   const [component] = router.getMatchedComponents({ ...to })
 

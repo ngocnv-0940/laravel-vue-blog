@@ -130,7 +130,6 @@ class UserController extends Controller
             DB::commit();
             return $uploaded;
         } catch (\Exception $e) {
-            return $e->getMessage();
             DB::rollback();
         }
     }
@@ -139,24 +138,4 @@ class UserController extends Controller
     {
         return MediaResource::collection($user->media()->latest()->paginate(12));
     }
-
-    // public function notifications()
-    // {
-    //     return new NotificationCollection($this->user->notifications()->paginate(10));
-    // }
-
-    // public function readNotifications(Request $request)
-    // {
-    //     try {
-    //         $request->validate([
-    //             'notifications' => 'required|array',
-    //         ]);
-
-    //         $this->user->notifications()->whereIn('id', $request->notifications)->update(['read_at' => now()]);
-
-    //         return ['status' => true];
-    //     } catch (\Exception $e) {
-    //         return ['status' => false];
-    //     }
-    // }
 }
