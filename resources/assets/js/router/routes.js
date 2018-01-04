@@ -1,16 +1,16 @@
-const PostIndex = () => import('~/pages/posts/index.vue')
-const PostShow = () => import('~/pages/posts/show.vue')
-const PostCreate = () => import('~/pages/posts/create.vue')
-const PostEdit = () => import('~/pages/posts/edit.vue')
+const PostIndex = () => import('~/pages/posts/index')
+const PostShow = () => import('~/pages/posts/show')
+const PostCreate = () => import('~/pages/posts/create')
+const PostEdit = () => import('~/pages/posts/edit')
 
-const CategoryShow = () => import('~/pages/categories/show.vue')
-const TagShow = () => import('~/pages/tags/show.vue')
-const UserShow = () => import('~/pages/users/show.vue')
-import Search from '~/pages/posts/search.vue'
+const CategoryShow = () => import('~/pages/categories/show')
+const TagShow = () => import('~/pages/tags/show')
+const UserShow = () => import('~/pages/users/show')
+import Search from '~/pages/posts/search'
 
-export default ({ authGuard, guestGuard }) => [
+export default [
   { path: '/search', component: Search, props: (route) => ({ query: route.query.q })  },
-  { path: '/', name: 'welcome', component: require('~/pages/welcome.vue') },
+  { path: '/', name: 'welcome', component: require('~/pages/welcome') },
   {
     path: '/category/:slug/:page(\\d+)?', name: 'post.category', component: CategoryShow,
     meta: { tab: 'category' }
@@ -42,22 +42,39 @@ export default ({ authGuard, guestGuard }) => [
   },
 
   // Authenticated routes.
-  ...authGuard([
-    { path: '/home', name: 'home', component: require('~/pages/home.vue') },
-    { path: '/settings', component: require('~/pages/settings/index.vue'), children: [
+  ...middleware('auth', [
+    { path: '/home', name: 'home', component: require('~/pages/home') },
+    { path: '/settings', component: require('~/pages/settings/index'), children: [
       { path: '', redirect: { name: 'settings.profile' }},
-      { path: 'profile', name: 'settings.profile', component: require('~/pages/settings/profile.vue') },
-      { path: 'password', name: 'settings.password', component: require('~/pages/settings/password.vue') }
+      { path: 'profile', name: 'settings.profile', component: require('~/pages/settings/profile') },
+      { path: 'password', name: 'settings.password', component: require('~/pages/settings/password') }
     ] },
     { path: '/create/post', name: 'post.create', component: PostCreate},
     { path: '/post/:slug/edit', name: 'post.edit', component: PostEdit, meta: { tab: 'post' }},
   ]),
 
-  // Guest routes.
-  ...guestGuard([
-    { path: '/password/reset', name: 'password.request', component: require('~/pages/auth/password/email.vue') },
-    { path: '/password/reset/:token', name: 'password.reset', component: require('~/pages/auth/password/reset.vue') }
+  ...middleware('admin', [
+    { path: '/admin', name: 'admin', component: PostCreate },
   ]),
 
-  { path: '*', component: require('~/pages/errors/404.vue') }
+  // Guest routes.
+  ...middleware('guest', [
+    { path: '/password/reset', name: 'password.request', component: require('~/pages/auth/password/email') },
+    { path: '/password/reset/:token', name: 'password.reset', component: require('~/pages/auth/password/reset') }
+  ]),
+
+  { path: '*', component: require('~/pages/errors/404') }
 ]
+
+/**
+ * @param  {String|Function} middleware
+ * @param  {Array} routes
+ * @return {Array}
+ */
+function middleware (middleware, routes) {
+  routes.forEach(route =>
+    (route.middleware || (route.middleware = [])).unshift(middleware)
+  )
+
+  return routes
+}
