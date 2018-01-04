@@ -25,8 +25,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('upload', 'UserController@uploadImage')->name('user.upload');
     Route::get('user/{user}/media', 'UserController@media')->name('user.media');
 
-    Route::patch('notifications/read', 'UserController@readNotifications')->name('user.read-noti');
-    Route::get('notifications', 'UserController@notifications')->name('user.notifications');
+    Route::get('notifications', 'NotificationController@notifications')->name('notifications');
+    Route::patch('notifications/read', 'NotificationController@markAsRead')->name('notifications.read');
+    Route::patch('notifications/read-all', 'NotificationController@markAllAsRead')->name('notifications.read-all');
+    Route::delete('notifications/del-all', 'NotificationController@deleteAll')->name('notifications.del-all');
 
     Route::post('logout', 'Auth\LoginController@logout');
 

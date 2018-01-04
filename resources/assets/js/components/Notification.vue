@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-item has-dropdown is-hoverable is-active">
+  <div class="navbar-item has-dropdown is-hoverable">
     <a class="navbar-item">
       <b-icon
         class="badge"
@@ -9,13 +9,38 @@
       </b-icon>
     </a>
     <div class="navbar-dropdown is-right navbar-noty">
+      <div class="navbar-item noti-header">
+        <div class="navbar-content">
+          <div class="level is-mobile">
+            <div class="level-left">
+              <div class="level-item">
+                <span class="icon has-text-black">
+                  <i class="fa fa-bell-o"></i>
+                </span>
+                <strong>Thông báo</strong>
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <a @click.prevent="markAllAsRead" href="#">
+                  <small>Đánh dấu tất cả là đã đọc</small>
+                </a>
+                <small>&nbsp;·&nbsp;</small>
+                <a href="#">
+                  <small>Cài đặt</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="noti-contents">
         <template v-for="noti in notifications">
           <router-link class="navbar-item"
             :class="{ 'noti-unread': !noti.is_read }"
             @click.native="markAsRead(noti)"
             exactActiveClass=""
-            :to="{ name: noti.data.type + '.show', params: { slug: noti.data.slug }}">
+            :to="{ name: noti.data.type + '.show', params: { slug: noti.data.slug }, hash: noti.data.hash }">
             <b-tooltip
               multilined animated
               size="is-large"
@@ -41,26 +66,11 @@
           <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i>
         </p>
       </div>
-
-      <div class="navbar-item">
-        <div class="navbar-content">
-          <div class="level is-mobile">
-            <div class="level-left">
-              <div class="level-item">
-                <strong>Xin chào</strong>
-              </div>
-            </div>
-            <div class="level-right">
-              <div class="level-item">
-                <a class="button bd-is-rss is-small" href="#">
-                  <span class="icon is-small">
-                    <i class="fa fa-bell-o"></i>
-                  </span>
-                  <span>Tất cả thông báo</span>
-                </a>
-              </div>
-            </div>
-          </div>
+      <div class="navbar-item noti-footer">
+        <div class="navbar-content has-text-centered">
+          <a href="#">
+            <small>Tất cả thông báo</small>
+          </a>
         </div>
       </div>
     </div>
@@ -84,7 +94,7 @@
         if (!this.hasMoreData) return
         this.isLoading = true
         this.current_page++
-        let { data } = await axios.get(route('user.notifications'), { params: { page: this.current_page }})
+        let { data } = await axios.get(route('notifications'), { params: { page: this.current_page }})
         this.notifications = [...this.notifications, ...data.data ]
         this.unread_count = data.unread_count
         if (data.meta.last_page <= this.current_page)
@@ -93,15 +103,21 @@
       },
       async markAsRead(notification) {
         if (notification.is_read) return
-        let { data } = await axios.patch(route('user.read-noti'), { notifications: [notification.id]})
+        let { data } = await axios.patch(route('notifications.read'), { notifications: [notification.id]})
         if (data.status) {
           notification.is_read = true
           this.unread_count--
-        } else {
-          this.$toast.open({
-            message: 'Đã có lỗi xảy ra!',
-            type: 'is-danger'
+        }
+      },
+      async markAllAsRead() {
+        if (this.unread_count == 0) return
+        let { data: { status }} = await axios.patch(route('notifications.read-all'))
+        if (status) {
+          this.notifications.forEach(noti => {
+            if (noti.is_read) return
+            noti.is_read = true
           })
+          this.unread_count = 0
         }
       }
     },
@@ -120,8 +136,22 @@
 
       Echo.private('App.Models.User.' + this.$store.getters.authUser.id)
         .notification((notification) => {
-          console.log(notification);
-        });
+          let newNoti = {
+            data: {
+              html: notification.html,
+              text: notification.text,
+              slug: notification.slug,
+              type: notification._type,
+              created_at: notification.created_at,
+            },
+            id: notification.id,
+            is_read: false,
+            type: 'comment_notify'
+          }
+          this.notifications.unshift(newNoti)
+          this.unread_count++
+          this.$snackbar.open(notification.text)
+        })
     }
   }
 </script>

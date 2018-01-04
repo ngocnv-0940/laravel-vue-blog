@@ -30,9 +30,9 @@ class CommentController extends Controller
             'type' => [
                 'string',
                 'nullable',
-                Rule::in(['post', 'video'])
+                Rule::in(['post', 'video']),
             ],
-            'slug' => 'string'
+            'slug' => 'string',
         ]);
 
         $model = self::MODEL_PATH . studly_case(array_get($data, 'type', 'Post'));
@@ -41,8 +41,9 @@ class CommentController extends Controller
         return CommentResource::collection($modelInstance
             ->comments()
             ->doesntHave('parent')
+            ->latest()
             ->with(['childs.user', 'childs.likes', 'user', 'likes'])
-            ->paginate(2));
+            ->paginate());
     }
 
     /**
@@ -68,11 +69,11 @@ class CommentController extends Controller
                 'type' => [
                     'string',
                     'nullable',
-                    Rule::in(['post', 'video'])
+                    Rule::in(['post', 'video']),
                 ],
                 'slug' => 'string',
                 'message' => 'required|string',
-                'parent_id' => 'nullable|integer|exists:comments,id'
+                'parent_id' => 'nullable|integer|exists:comments,id',
             ]);
 
             $model = self::MODEL_PATH . studly_case(array_get($array, 'type', 'Post'));

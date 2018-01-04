@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <article class="media" v-for="(comment, index) in comments" :key="comment.id">
+    <article class="media" v-for="(comment, index) in comments" :key="comment.id" :id="'comment-' + comment.id">
       <figure class="media-left">
         <p class="image is-64x64">
           <img src="http://bulma.io/images/placeholders/128x128.png">
@@ -27,7 +27,7 @@
           </p>
         </div>
 
-        <article class="media" v-for="(child, index) in comment.childs" :key="child.id">
+        <article class="media" v-for="(child, index) in comment.childs" :key="child.id" :id="'comment-' + child.id">
           <figure class="media-left">
             <p class="image is-48x48">
               <img src="http://bulma.io/images/placeholders/96x96.png">

@@ -49,8 +49,9 @@ class CommentNotify extends Notification implements ShouldQueue
     {
         return [
             'html' => $this->getTitle(),
-            'text' => strip_tags($this->getTitle()),
+            'text' => strip_tags(str_replace(['<strong>', '</strong>'], '"', $this->getTitle())),
             'slug' => $this->comment->commentable->slug,
+            'hash' => '#comment-' . $this->comment->id,
             'type' => snake_case(class_basename($this->comment->commentable_type)),
             'created_at' => (string) $this->comment->created_at,
         ];
@@ -66,9 +67,10 @@ class CommentNotify extends Notification implements ShouldQueue
     {
         return new BroadcastMessage([
             'html' => $this->getTitle(),
-            'text' => strip_tags($this->getTitle()),
-            'slug' => route('post.show', $this->comment->commentable->slug),
-            'type' => snake_case(class_basename($this->comment->commentable_type)),
+            'text' => strip_tags(str_replace(['<strong>', '</strong>'], '"', $this->getTitle())),
+            'slug' => $this->comment->commentable->slug,
+            'hash' => 'comment-' . $this->comment->id,
+            '_type' => snake_case(class_basename($this->comment->commentable_type)),
             'created_at' => (string) $this->comment->created_at,
         ]);
     }
@@ -78,8 +80,7 @@ class CommentNotify extends Notification implements ShouldQueue
     private function getTitle()
     {
         return $this->isReply
-            ? '<b>' . $this->user->name . '</b> đã trả lời bình luận của bạn trong <b>' . $this->comment->commentable->title . '</b>'
-            : '<b>' . $this->user->name . '</b> đã bình luận trong <b>' . $this->comment->commentable->title . '</b>';
+            ? '<b>' . $this->user->name . '</b> đã trả lời bình luận của bạn trong <strong>' . $this->comment->commentable->title . '</strong>'
+            : '<b>' . $this->user->name . '</b> đã bình luận trong <strong>' . $this->comment->commentable->title . '</strong>';
     }
-
 }
