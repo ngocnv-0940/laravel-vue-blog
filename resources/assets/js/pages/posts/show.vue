@@ -146,10 +146,6 @@ export default {
     this.fetchArticle('post.show')
     this.fetchComments({ refresh: true })
   },
-  mounted() {
-    console.log(this.$route.hash.slice(1))
-    console.log($(this.$route.hash))
-  },
   computed: {
     ...mapGetters(['authUser', 'authCheck']),
     ...mapGetters('article', ['hasLiked']),

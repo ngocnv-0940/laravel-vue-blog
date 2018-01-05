@@ -127,12 +127,16 @@ function setLayout (to) {
  * @return {Object}
  */
 function scrollBehavior (to, from, savedPosition) {
-  if (savedPosition) {
-    return savedPosition
+  if (to.hash) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({ selector: to.hash })
+      }, 500)
+    })
   }
 
-  if (to.hash) {
-    return { selector: to.hash }
+  if (savedPosition) {
+    return savedPosition
   }
 
   const [component] = router.getMatchedComponents({ ...to }).slice(-1)

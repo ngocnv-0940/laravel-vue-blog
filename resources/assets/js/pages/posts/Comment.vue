@@ -127,7 +127,6 @@
     computed: {
       ...mapGetters(['authCheck', 'authUser']),
       ...mapState('comment', ['comments', 'is_last_page', 'loading'])
-
     },
     methods: {
       ...mapActions('article', ['updateArticle']),
@@ -159,6 +158,29 @@
       data() {
         this.comments = this.data
       }
-    }
+    },
+    updated() {
+      let hash = this.$route.hash
+      // console.log(hash)
+      if (hash) {
+        let element = document.getElementById(hash.slice(1))
+        if (element) {
+          let height = $('.navbar-menu').height()
+        // window.scrollTo(0, element.offsetTop - height)
+        // console.log(element)
+        // $(document).ready(function () {
+        //   $('html,body').animate({
+        //           scrollTop: $(hash).offset().top +
+        //         }, 'fast');
+        //   console.log()
+
+        // })
+        // window.location.hash = hash
+        }
+        // console.log($(hash))
+        // console.log($(hash))
+        // window.scrollTo(0, 500)
+      }
+    },
   }
 </script>
