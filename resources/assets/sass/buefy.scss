@@ -8,9 +8,9 @@ $facebook: #4267B2;
 $facebook-invert: findColorInvert($facebook);
 $googleplus: #DB4437;
 $googleplus-invert: findColorInvert($googleplus);
-$primary: #069;
+$primary: #00695C;
 $primary-invert: findColorInvert($primary);
-
+$unread: lighten(rgba($primary, .2), 10%);
 $colors: (
   "white": ($white, $black),
   "black": ($black, $white),
@@ -57,9 +57,6 @@ $container-offset: 140px;
   }
 }
 .navbar-noty {
-  .noti-unread {
-    background-color: #f5fffaba;
-  }
   .navbar-divider {
     margin: 0;
   }
@@ -72,6 +69,11 @@ $container-offset: 140px;
   .noti-nothing {
     margin: 1em 0;
   }
+}
+
+.is-unread {
+  background-color: $unread;
+  // transition: all 1s ease;
 }
 
 .is-poiter {

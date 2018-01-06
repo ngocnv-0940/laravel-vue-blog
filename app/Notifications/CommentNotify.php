@@ -69,7 +69,7 @@ class CommentNotify extends Notification implements ShouldQueue
             'html' => $this->getTitle(),
             'text' => strip_tags(str_replace(['<strong>', '</strong>'], '"', $this->getTitle())),
             'slug' => $this->comment->commentable->slug,
-            'hash' => 'comment-' . $this->comment->id,
+            'hash' => '#comment-' . $this->comment->id,
             '_type' => snake_case(class_basename($this->comment->commentable_type)),
             'created_at' => (string) $this->comment->created_at,
         ]);

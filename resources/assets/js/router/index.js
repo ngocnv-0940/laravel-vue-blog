@@ -127,13 +127,13 @@ function setLayout (to) {
  * @return {Object}
  */
 function scrollBehavior (to, from, savedPosition) {
-  if (to.hash) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({ selector: to.hash })
-      }, 500)
-    })
-  }
+  // if (to.hash) {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       resolve({ selector: to.hash })
+  //     }, 500)
+  //   })
+  // }
 
   if (savedPosition) {
     return savedPosition

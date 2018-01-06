@@ -26,7 +26,7 @@
                   <small>Đánh dấu tất cả là đã đọc</small>
                 </a>
                 <small>&nbsp;·&nbsp;</small>
-                <a href="#">
+                <a href="#" @click.prevent="chualam">
                   <small>Cài đặt</small>
                 </a>
               </div>
@@ -40,7 +40,7 @@
         </div>
         <template v-for="noti in notifications" v-else>
           <router-link class="navbar-item"
-            :class="{ 'noti-unread': !noti.is_read }"
+            :class="{ 'is-unread': !noti.is_read }"
             @click.native="markAsRead(noti)"
             exactActiveClass=""
             :to="{ name: noti.data.type + '.show', params: { slug: noti.data.slug }, hash: noti.data.hash }">
@@ -71,7 +71,7 @@
       </div>
       <div class="navbar-item noti-footer">
         <div class="navbar-content has-text-centered">
-          <a href="#">
+          <a href="#" @click.prevent="chualam">
             <small>Tất cả thông báo</small>
           </a>
         </div>
@@ -143,6 +143,7 @@
             data: {
               html: notification.html,
               text: notification.text,
+              hash: notification.hash,
               slug: notification.slug,
               type: notification._type,
               created_at: notification.created_at,
@@ -153,7 +154,12 @@
           }
           this.notifications.unshift(newNoti)
           this.unread_count++
-          this.$snackbar.open(notification.text)
+          this.$snackbar.open({
+            message: notification.text,
+            onAction: () => {
+              this.$router.push({ name: notification._type + '.show', params: { slug: notification.slug }, hash: notification.hash })
+            }
+          })
         })
     }
   }

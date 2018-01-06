@@ -1,5 +1,26 @@
 <template>
-  <div class="box">
+  <div class="box" id="comment">
+    <article class="media" v-if="authCheck">
+      <figure class="media-left">
+        <p class="image is-64x64">
+          <img src="http://bulma.io/images/placeholders/128x128.png">
+        </p>
+      </figure>
+      <div class="media-content">
+        <div class="field">
+          <p class="control">
+            <textarea class="textarea"
+              placeholder="Nhập bình luận, Ctrl + Enter để gửi..."
+              :class="{ 'is-danger': form.errors.has('message') && !form.parent_id }"
+              rows="2"
+              @keyup.ctrl.enter.prevent="sendComment($event, true)">
+            </textarea>
+          </p>
+          <p v-if="form.errors.has('message') && !form.parent_id" class="help is-danger">{{ form.errors.get('message') }}</p>
+        </div>
+      </div>
+    </article>
+    <article class="media" v-else>Vui lòng đăng nhập để bình luận!</article>
     <article class="media" v-for="(comment, index) in comments" :key="comment.id" :id="'comment-' + comment.id">
       <figure class="media-left">
         <p class="image is-64x64">
@@ -85,28 +106,6 @@
     </article>
 
     <a class="has-text-centered has-text-primary" v-if="!is_last_page" @click="fetchComments({})">Xem thêm bình luận</a>
-
-    <article class="media" v-if="authCheck">
-      <figure class="media-left">
-        <p class="image is-64x64">
-          <img src="http://bulma.io/images/placeholders/128x128.png">
-        </p>
-      </figure>
-      <div class="media-content">
-        <div class="field">
-          <p class="control">
-            <textarea class="textarea"
-              placeholder="Nhập bình luận, Ctrl + Enter để gửi..."
-              :class="{ 'is-danger': form.errors.has('message') && !form.parent_id }"
-              rows="2"
-              @keyup.ctrl.enter.prevent="sendComment($event, true)">
-            </textarea>
-          </p>
-          <p v-if="form.errors.has('message') && !form.parent_id" class="help is-danger">{{ form.errors.get('message') }}</p>
-        </div>
-      </div>
-    </article>
-    <article class="media" v-else>Vui lòng đăng nhập để bình luận!</article class="media">
   </div>
 </template>
 <script>
@@ -152,35 +151,30 @@
       },
       hasLike(comment) {
         return this.authCheck ? comment.likes.some(like => like.user_id == this.authUser.id) : false
+      },
+      scrollToHash() {
+        const hash = this.$route.hash
+        if (!hash) return
+        let element = $(hash)
+        if (!element.length) return
+        let padding = + element.css('padding-top').replace('px', '')
+        let height = $('.navbar-menu').height()
+
+        $('html').animate({
+          scrollTop: element.offset().top - height - padding,
+        })
       }
     },
     watch: {
       data() {
         this.comments = this.data
+      },
+      $route() {
+        setTimeout(this.scrollToHash, 500)
       }
     },
-    updated() {
-      let hash = this.$route.hash
-      // console.log(hash)
-      if (hash) {
-        let element = document.getElementById(hash.slice(1))
-        if (element) {
-          let height = $('.navbar-menu').height()
-        // window.scrollTo(0, element.offsetTop - height)
-        // console.log(element)
-        // $(document).ready(function () {
-        //   $('html,body').animate({
-        //           scrollTop: $(hash).offset().top +
-        //         }, 'fast');
-        //   console.log()
-
-        // })
-        // window.location.hash = hash
-        }
-        // console.log($(hash))
-        // console.log($(hash))
-        // window.scrollTo(0, 500)
-      }
-    },
+    mounted() {
+      setTimeout(this.scrollToHash, 1000)
+    }
   }
 </script>

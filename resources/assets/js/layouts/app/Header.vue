@@ -83,6 +83,7 @@
             <b-field>
               <b-input placeholder="Tìm kiếm..."
                 type="search"
+                @input.native.once="chualam"
                 icon="search">
               </b-input>
             </b-field>

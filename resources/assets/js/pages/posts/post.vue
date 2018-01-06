@@ -41,10 +41,10 @@
             <span class="icon icon-small"><i class="fa fa-eye"></i></span>
             <small>10</small>
           </a>
-          <a class="level-item">
+          <router-link :to="{ name: 'post.show', params: { slug: post.slug }, hash: '#comment'}" class="level-item">
             <span class="icon icon-small"><i class="fa fa-comments"></i></span>
             <small>{{ post.comments_count }}</small>
-          </a>
+          </router-link>
           <a class="level-item">
             <span class="icon is-small"><i class="fa fa-heart"></i></span>
             <small>{{ post.likes_count }}</small>
