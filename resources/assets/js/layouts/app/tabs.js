@@ -14,8 +14,7 @@ export default [
     name: 'category',
     title: 'Chuyên mục',
     component: Category,
-    route: 'post.category',
-    params: { slug: 'sydni-erdman-v' }
+    route: 'post.category'
   },
   {
     name: 'user',

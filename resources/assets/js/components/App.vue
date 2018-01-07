@@ -35,7 +35,11 @@ export default {
 
     return {
       title: appName,
-      titleTemplate: `%s · ${appName}`
+      titleTemplate: `%s · ${appName}`,
+      meta: [
+        { vmid: 'keywords', name: 'keywords', content: window.config.meta.keyword },
+        { vmid: 'description', name: 'description', content: window.config.meta.description }
+      ]
     }
   },
 

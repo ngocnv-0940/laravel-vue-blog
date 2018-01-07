@@ -1,5 +1,5 @@
 <template>
-  <section class="hero has-text-centered">
+  <section class="hero has-text-centered is-404">
     <div class="hero-body">
       <div class="container is-uppercase">
         <h1 class="title">
@@ -7,7 +7,7 @@
         </h1>
         <h2 class="subtitle">
           <router-link :to="{ name: 'welcome' }">
-            {{ $t('go_home') }}
+            <i class="fa fa-home"></i> {{ $t('go_home') }}
           </router-link>
         </h2>
       </div>
@@ -19,6 +19,6 @@
 export default {
   name: 'not-found',
 
-  layout: 'app'
+  layout: 'default'
 }
 </script>

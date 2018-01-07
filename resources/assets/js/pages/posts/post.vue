@@ -2,7 +2,7 @@
   <article class="media">
     <figure class="media-left is-hidden-mobile">
       <p class="image is-128x128">
-        <img :src="post.thumb">
+        <img :src="post.thumb" :alt="post.title">
       </p>
     </figure>
     <div class="media-content">
@@ -46,7 +46,7 @@
             <small>{{ post.comments_count }}</small>
           </router-link>
           <a class="level-item">
-            <span class="icon is-small"><i class="fa fa-heart"></i></span>
+            <span class="icon is-small"><i class="fa fa-heart"></i></span> &nbsp;
             <small>{{ post.likes_count }}</small>
           </a>
         </div>

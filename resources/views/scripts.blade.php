@@ -1,14 +1,29 @@
+@if (env('ANALYTICS_ID'))
+  <script async src="https://www.googletagmanager.com/gtag/js?id={!! env('ANALYTICS_ID') !!}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '{!! env('ANALYTICS_ID') !!}');
+  </script>
+@endif
+
 {{-- Global configuration object --}}
 @php
 $config = [
     'appName' => config('app.name'),
     'locale' => $locale = app()->getLocale(),
     'translations' => json_decode(file_get_contents(resource_path("lang/{$locale}.json")), true),
+    'meta' => [
+      'keyword' => env('META_KEYWORDS'),
+      'description' => env('META_DESCRIPTION'),
+    ]
 ];
 @endphp
 {{--  Application routes  --}}
 @routes
-<script>window.config = {!! json_encode($config); !!};</script>
+<script>window.config = @json($config);</script>
 
 {{-- Polyfill some features via polyfill.io --}}
 @php

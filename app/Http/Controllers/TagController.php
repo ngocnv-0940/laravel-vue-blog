@@ -25,7 +25,7 @@ class TagController extends Controller
                 ->where('posts.is_public', '=', 1);
         })
         ->select('tags.*', \DB::raw('count(posts.id) as posts_count'))
-        ->groupBy('tags.id')
+        ->groupBy('tags.id', 'tags.name', 'tags.slug', 'tags.created_at', 'tags.updated_at')
         ->orderBy('posts_count', 'desc')
         ->take(10)
         ->get();

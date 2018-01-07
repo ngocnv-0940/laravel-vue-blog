@@ -1,28 +1,33 @@
 <template>
   <footer class="footer">
     <div class="container">
-      <div class="content">
-        <p>Made with <b-icon icon="heart" type="is-danger"></b-icon> using Laravel and Vuejs</p>
+      <div class="content has-text-centered">
         <p>
-          <small>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste, dignissimos.
-            <br>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis nulla impedit quam sint, illum modi.
-          </small>
+          Made with <b-icon icon="heart" type="is-danger" size="is-small"></b-icon> using <strong class="is-laravel">Laravel</strong>, <strong class="is-bulma">Bulma</strong> and <strong class="is-vue">Vuejs</strong>
         </p>
-
-        <b-field>
-          <p class="control">
-            <a class="button" href="#" target="_blank">
-              <b-icon icon="github"></b-icon> <span>GitHub</span>
-            </a>
-          </p>
-          <p class="control">
-            <a class="button is-twitter" href="#" target="_blank">
-              <b-icon icon="twitter"></b-icon> <span>Twitter</span>
-            </a>
-          </p>
-        </b-field>
+        <p>
+          <a href="https://github.com/nguyenvanngoc" target="_blank">
+            <b-icon
+              icon="github"
+              size="is-medium"
+              type="is-dark">
+            </b-icon>
+          </a>
+          <a href="https://www.facebook.com/blaysku" target="_blank">
+            <b-icon
+              icon="facebook"
+              size="is-medium"
+              type="is-facebook">
+            </b-icon>
+          </a>
+          <a href="https://plus.google.com/u/0/+Nguy%E1%BB%85nV%C4%83nNg%E1%BB%8Dc94" target="_blank">
+            <b-icon
+              icon="google-plus-square"
+              size="is-medium"
+              type="is-googleplus">
+            </b-icon>
+          </a>
+        </p>
       </div>
     </div>
   </footer>

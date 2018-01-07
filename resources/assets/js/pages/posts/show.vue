@@ -55,7 +55,7 @@
             </a>
             <b-dropdown hoverable class="level-item"
               v-if="authCheck && authUser.id == post.author.id">
-              <a class="button is-info is-small is-outlined" slot="trigger">
+              <a class="button is-primary is-small is-outlined" slot="trigger">
                 <b-icon icon="pencil-square-o" pack="fa"></b-icon>
                 Tùy chọn
                 <b-icon icon="caret-down"></b-icon>
@@ -159,6 +159,10 @@ export default {
         value: !this.post.is_public
       })
       this.updateArticle({ is_public: !this.post.is_public })
+      this.$snackbar.open({
+        message: this.post.is_public ? 'Đã công khai bài viết' : 'Đã lưu nháp bài viết',
+        queue: false
+      })
     },
     deletePost() {
       this.$dialog.confirm({

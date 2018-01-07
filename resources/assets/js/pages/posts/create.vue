@@ -58,6 +58,7 @@
     import stripmd from '~/helpers/stripmd.js'
     import { mapGetters } from 'vuex'
     export default {
+        layout: 'default',
         data() {
             return {
                 tags: [],
