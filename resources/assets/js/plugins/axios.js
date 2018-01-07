@@ -18,23 +18,19 @@ axios.interceptors.request.use(request => {
 
 axios.interceptors.response.use(response => response, error => {
   const { status, data: { message } } = error.response
-
-  if (status >= 500 || status === 429) {
-    Toast.open({
-      message: i18n.t('error_alert_text'),
-      type: 'is-danger'
-    })
-  }
-
-  if (status === 404 || status === 403) {
+  if (status === 404) {
     Toast.open({
       message: i18n.t('page_not_found'),
       type: 'is-danger'
     })
     router.replace('/not-found')
-  }
-
-  if (status === 401 && store.getters.authCheck) {
+  } else if (status === 403) {
+    Toast.open({
+      message: 'Bạn không có quyền truy cập trang này!',
+      type: 'is-danger'
+    })
+    router.replace('/')
+  } else if (status === 401 && store.getters.authCheck) {
     Toast.open({
       message: i18n.t('token_expired_alert_text'),
       type: 'is-warning'
@@ -43,6 +39,11 @@ axios.interceptors.response.use(response => response, error => {
       await store.dispatch('logout')
 
       router.push({ name: 'login' })
+    })
+  } else if (status >= 500) {
+    Toast.open({
+      message: i18n.t('error_alert_text'),
+      type: 'is-danger'
     })
   }
 

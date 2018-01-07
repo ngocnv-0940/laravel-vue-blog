@@ -39,7 +39,7 @@ export const mutations = {
         let index = state.comments.findIndex(cm => cm.id == comment.parent_id)
         state.comments[index].childs.push(comment)
       } else {
-        state.comments.push(comment)
+        state.comments.unshift(comment)
       }
   },
 

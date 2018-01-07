@@ -2,18 +2,23 @@
   <div class="container">
     <div class="columns">
       <div class="is-three-quarters column">
-        <post :post="post" v-for="post in posts" :key="post.slug"></post>
-        <b-pagination
-          :total="total"
-          :current.sync="page"
-          order="is-centered"
-          @change="changePage"
-          per-page="15">
-        </b-pagination>
+        <template v-if="loaded">
+          <template v-if="posts.length">
+            <post :post="post" v-for="post in posts" :key="post.slug"></post>
+            <b-pagination
+              :total="total"
+              :current.sync="page"
+              order="is-centered"
+              @change="changePage"
+              per-page="15">
+            </b-pagination>
+          </template>
+          <p class="has-text-centered subtitle" v-else>Chưa có nội dung, hãy <router-link :to="{ name: 'post.create' }">đăng bài đầu tiên</router-link>!</p>
+        </template>
       </div>
       <div class="column">
         <section class="right-sidebar">
-          <h2 class="subtitle">Popular tags</h2>
+          <h2 class="subtitle">Tag phổ biến</h2>
           <b-field grouped group-multiline>
             <div class="control" v-for="tag in tags" :key="tag.slug">
               <router-link :to="{ name: 'tag.show', params: { slug: tag.slug }}">
@@ -35,7 +40,12 @@ import axios from 'axios'
 import Post from './post'
 export default {
   metaInfo () {
-    return { title: 'Tin tức' }
+    return {
+      title: 'Tin tức',
+      meta: [
+        { vmid: 'description', name: 'description', content: 'Tin tức công nghệ, lập trình web php, laravel framwork, vuejs, nodejs' }
+      ]
+    }
   },
   props: {
     params: {
@@ -49,7 +59,8 @@ export default {
       tags: [],
       page: +this.$route.params.page || 1,
       loading: false,
-      total: 0
+      total: 0,
+      loaded: false
     }
   },
   created() {
@@ -76,6 +87,7 @@ export default {
         })
       }
       loading.close()
+      this.loaded = true
     },
     async getTags() {
       let { data: { data: tags }} = await axios.get(route('tag.index'))

@@ -4,7 +4,7 @@
             :type="form.errors.has('email') ? 'is-danger' : ''"
             :message="form.errors.get('email')">
             <b-input
-                icon="email"
+                icon="envelope"
                 v-model="form.email"
                 placeholder="Email hoặc username của bạn"
                 required>
@@ -15,7 +15,7 @@
             :type="form.errors.has('password') ? 'is-danger' : ''"
             :message="form.errors.get('password')">
             <b-input
-                icon="vpn_key"
+                icon="key"
                 type="password"
                 v-model="form.password"
                 password-reveal
@@ -65,7 +65,7 @@
               })
 
               // Redirect home.
-              // this.$router.push({ name: 'home' })
+              // this.$router.push({ name: 'welcome' })
             },
             closeModal() {
                 this.$emit('closeModal')

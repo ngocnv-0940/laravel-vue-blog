@@ -2,14 +2,19 @@
   <div class="container">
     <div class="columns">
       <div class="is-three-quarters column">
-        <post :post="post" v-for="post in posts" :key="post.slug"></post>
-        <b-pagination
-          :total="total"
-          :current.sync="page"
-          order="is-centered"
-          @change="changePage"
-          per-page="15">
-        </b-pagination>
+        <template v-if="loaded">
+          <template v-if="posts.length">
+            <post :post="post" v-for="post in posts" :key="post.slug"></post>
+            <b-pagination
+              :total="total"
+              :current.sync="page"
+              order="is-centered"
+              @change="changePage"
+              per-page="15">
+            </b-pagination>
+          </template>
+          <p class="has-text-centered subtitle" v-else>Chưa có nội dung, hãy <router-link :to="{ name: 'post.create' }">đăng bài đầu tiên</router-link>!</p>
+        </template>
       </div>
       <div class="column">
         <section class="right-sidebar">
@@ -33,11 +38,13 @@ export default {
       posts: [],
       tag: {},
       page: +this.$route.params.page || 1,
-      total: 0
+      total: 0,
+      loaded: false
     }
   },
-  created() {
-    this.getPosts()
+  async created() {
+    await this.getPosts()
+    this.loaded = true
   },
   methods: {
     async getPosts() {

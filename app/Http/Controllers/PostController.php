@@ -52,10 +52,11 @@ class PostController extends Controller
             'title' => 'required|unique:posts,title|max:255',
             'category_id' => 'required|integer|exists:categories,id',
             'content' => 'required|string',
-            'excerpt' => 'string|max:255',
+            'excerpt' => 'string|max:255|nullable',
             'tags' => 'array|nullable',
             'is_public' => 'boolean',
-            'meta_keywords' => 'string|nullable'
+            'image' => 'string|nullable',
+            'meta_keywords' => 'string|nullable',
         ]);
         $data['meta_description'] = $data['excerpt'];
         $data['slug'] = str_slug($data['title']);
@@ -99,9 +100,10 @@ class PostController extends Controller
             'title' => 'required|max:255|unique:posts,title,' . $post->id,
             'category_id' => 'required|integer|exists:categories,id',
             'content' => 'required|string',
-            'excerpt' => 'string|max:255',
+            'excerpt' => 'string|max:255|nullable',
             'tags' => 'array|nullable',
             'is_public' => 'boolean',
+            'image' => 'string|nullable',
             'meta_keywords' => 'string|nullable',
         ]);
         $data['meta_description'] = $data['excerpt'];
@@ -128,17 +130,23 @@ class PostController extends Controller
      * @param  Request $request
      * @return array
      */
-    public function changeStatus(Request $request)
+    public function changeStatus(Request $request, Post $post)
     {
         $data = $request->validate([
-            'id' => 'required|array',
-            'value' => 'required|boolean'
+            'id' => 'array|nullable',
+            'value' => 'required|boolean',
         ]);
 
-        \DB::transaction(function () use ($data) {
-            $this->post->withDraft()->whereIn('id', $data['id'])
-                ->update(['is_public' => $data['value']]);
-        });
+        if (isset($post)) {
+            $this->authorize('manage', $post);
+            $post->update(['is_public' => $data['value']]);
+        } else {
+            abort_unless(is_array($data['id']), 422);
+            \DB::transaction(function () use ($data) {
+                $this->post->withDraft()->whereIn('id', $data['id'])
+                    ->update(['is_public' => $data['value']]);
+            });
+        }
 
         return ['status' => true];
     }

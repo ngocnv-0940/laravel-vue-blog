@@ -1,5 +1,5 @@
 @import "~bulma/sass/utilities/_all";
-@import "~buefy/src/scss/utils/_theme-variables";
+@import "~buefy/src/scss/utils/_variables";
 $gap: 120px;
 // Colors
 $twitter: #4099FF;
@@ -8,8 +8,13 @@ $facebook: #4267B2;
 $facebook-invert: findColorInvert($facebook);
 $googleplus: #DB4437;
 $googleplus-invert: findColorInvert($googleplus);
-$primary: #069;
+$primary: #369;
 $primary-invert: findColorInvert($primary);
+$unread: lighten(rgba($primary, .2), 10%);
+
+$laravel: #e74430;
+$vue: #42b983;
+$bulma: #00d1b2;
 
 $colors: (
   "white": ($white, $black),
@@ -36,18 +41,93 @@ $container-offset: 140px;
 
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
-
+@import "~bulma-badge";
 @import "~highlight.js/styles/atelier-cave-light.css";
 
 
 // Helpers
+@media screen and (min-width: 1024px) {
+  .navbar-noty {
+    width: 25rem;
+    .noti-contents {
+      overflow-y: auto;
+      max-height: 30rem;
+    }
+    .noti-content {
+      white-space: nowrap;
+      max-width: 22.5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+[v-cloak] {
+  display: none;
+}
+
+.is-laravel {
+  color: $laravel;
+}
+.is-vue {
+  color: $vue;
+}
+.is-bulma {
+  color: $bulma;
+}
+.navbar-noty {
+  .navbar-divider {
+    margin: 0;
+  }
+  .noti-header {
+    border-bottom: solid 1px #dbdbdb;
+  }
+  .noti-footer {
+    border-top: solid 1px #dbdbdb;
+  }
+  .noti-nothing {
+    margin: 1em 0;
+  }
+}
+
+.is-unread {
+  background-color: $unread;
+  // transition: all 1s ease;
+}
+
+.is-poiter {
+  cursor: pointer;
+}
+
 .right-sidebar {
   border-left: 1px solid rgba($border, 0.5);
   padding-left: 1em;
+  // min-width: 16rem;
+  margin-right: 3rem;
+  padding-right: 1rem;
+  position: sticky;
+  top: 4.5rem;
+  // overflow: auto;
+  max-height: calc(100vh - 6rem);
+  .menu-list a {
+      display: flex;
+      .menu-text {
+          flex: 1 1 auto;
+      }
+  }
 }
 
 .pagination {
   margin-top: 1rem;
+}
+
+.content img {
+  display: block;
+  margin: 0 auto;
+}
+
+.modal {
+  z-index: 99;
 }
 
 // .example {

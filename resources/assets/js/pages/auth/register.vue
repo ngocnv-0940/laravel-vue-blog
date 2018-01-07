@@ -1,12 +1,12 @@
 <template>
     <section class="modal-card-body">
-        <b-field label="Name"
+        <b-field label="Tên"
             :type="form.errors.has('name') ? 'is-danger' : ''"
             :message="form.errors.get('name')">
             <b-input
-                icon="account_circle"
+                icon="id-card"
                 v-model="form.name"
-                placeholder="Your full name"
+                placeholder="Tên của bạn"
                 required>
             </b-input>
         </b-field>
@@ -15,36 +15,36 @@
             :type="form.errors.has('email') ? 'is-danger' : ''"
             :message="form.errors.get('email')">
             <b-input
-                icon="email"
+                icon="envelope"
                 type="email"
                 v-model="form.email"
-                placeholder="Your email"
+                placeholder="Thư điện tử"
                 required>
             </b-input>
         </b-field>
 
-        <b-field label="Password"
+        <b-field label="Mật khẩu"
             :type="form.errors.has('password') ? 'is-danger' : ''"
             :message="form.errors.get('password')">
             <b-input
-                icon="vpn_key"
+                icon="key"
                 type="password"
                 v-model="form.password"
                 password-reveal
-                placeholder="Your password"
+                placeholder="Nhập mật khẩu"
                 required>
             </b-input>
         </b-field>
 
-        <b-field label="Password confirmation"
+        <b-field label="Nhập lại mật khẩu"
             :type="form.errors.has('password_confirmation') ? 'is-danger' : ''"
             :message="form.errors.get('password_confirmation')">
             <b-input
-                icon="vpn_key"
+                icon="key"
                 type="password"
                 v-model="form.password_confirmation"
                 password-reveal
-                placeholder="Your password confirmation"
+                placeholder="Nhập lại mật khẩu"
                 required>
             </b-input>
         </b-field>
@@ -80,7 +80,7 @@
             this.$emit('closeModal')
 
             // Redirect home.
-            this.$router.push({ name: 'home' })
+            this.$router.push({ name: 'welcome' })
           }
         }
     }

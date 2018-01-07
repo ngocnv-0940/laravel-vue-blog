@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
-use Illuminate\Database\Query\oldest;
+use App\Notifications\CommentNotify;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -30,9 +30,9 @@ class CommentController extends Controller
             'type' => [
                 'string',
                 'nullable',
-                Rule::in(['post', 'video'])
+                Rule::in(['post', 'video']),
             ],
-            'slug' => 'string'
+            'slug' => 'string',
         ]);
 
         $model = self::MODEL_PATH . studly_case(array_get($data, 'type', 'Post'));
@@ -41,8 +41,9 @@ class CommentController extends Controller
         return CommentResource::collection($modelInstance
             ->comments()
             ->doesntHave('parent')
+            ->latest()
             ->with(['childs.user', 'childs.likes', 'user', 'likes'])
-            ->paginate(2));
+            ->paginate());
     }
 
     /**
@@ -68,25 +69,30 @@ class CommentController extends Controller
                 'type' => [
                     'string',
                     'nullable',
-                    Rule::in(['post', 'video'])
+                    Rule::in(['post', 'video']),
                 ],
                 'slug' => 'string',
                 'message' => 'required|string',
-                'parent_id' => 'nullable|integer|exists:comments,id'
+                'parent_id' => 'nullable|integer|exists:comments,id',
             ]);
 
             $model = self::MODEL_PATH . studly_case(array_get($array, 'type', 'Post'));
             $modelInstance = app($model)->whereSlug($array['slug'])->firstOrFail();
 
-            return new CommentResource($modelInstance
-                ->comments()
-                ->create(
-                    array_merge(
-                        array_only($array, ['parent_id', 'message']),
-                        ['user_id' => auth()->id()])
+            $comment = $modelInstance->comments()->create(
+                array_merge(
+                    array_only($array, ['parent_id', 'message']),
+                    ['user_id' => auth()->id()]
                 )
-                ->load(['user'])
             );
+
+            if ($comment->parent && $comment->parent->user->id != auth()->id()) {
+                $comment->parent->user->notify(new CommentNotify($comment, auth()->user(), true));
+            } elseif ($modelInstance->author->id != auth()->id()) {
+                $modelInstance->author->notify(new CommentNotify($comment, auth()->user()));
+            }
+
+            return new CommentResource($comment->load(['user']));
         }
         abort(500, 'Please login to do this action');
     }

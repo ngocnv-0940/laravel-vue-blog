@@ -2,19 +2,46 @@
   <div class="container">
     <div class="columns">
       <div class="is-three-quarters column">
-        <post :post="post" v-for="post in posts" :key="post.slug"></post>
-        <b-pagination
-          :total="total"
-          :current.sync="page"
-          order="is-centered"
-          @change="changePage"
-          per-page="15">
-        </b-pagination>
+        <template v-if="loaded">
+          <template v-if="posts.length">
+            <post :post="post" v-for="post in posts" :key="post.slug"></post>
+            <b-pagination
+              :total="total"
+              :current.sync="page"
+              order="is-centered"
+              @change="changePage"
+              per-page="15">
+            </b-pagination>
+          </template>
+          <p class="has-text-centered subtitle" v-else>Chưa có nội dung, hãy <router-link :to="{ name: 'post.create' }">đăng bài đầu tiên</router-link>!</p>
+        </template>
       </div>
+
       <div class="column">
         <section class="right-sidebar">
-          <h2 class="subtitle">{{ category.name }}</h2>
-          {{ category }}
+          <article class="media">
+            <figure class="media-left">
+              <p class="image is-64x64">
+                <img src="http://bulma.io/images/placeholders/128x128.png">
+              </p>
+            </figure>
+            <div class="media-content">
+              <div class="content">
+                <p>
+                  <strong>{{ category.name }}</strong><br>
+                  <small>@{{ category.username }}</small>
+                </p>
+              </div>
+            </div>
+          </article>
+          <article class="media">
+            <table class="table is-fullwidth">
+              <tr>
+                <th>Tồng bài viết</th>
+                <td class="has-text-right">{{ category.posts_count }}</td>
+              </tr>
+            </table>
+          </article>
         </section>
       </div>
     </div>
@@ -33,11 +60,13 @@ export default {
       posts: [],
       category: {},
       page: +this.$route.params.page || 1,
-      total: 0
+      total: 0,
+      loaded: false
     }
   },
   async created() {
     await this.getPosts()
+    this.loaded = true
     this.$store.commit('setTitle', { title: this.category.name })
   },
   methods: {

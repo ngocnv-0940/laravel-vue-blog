@@ -1,23 +1,9 @@
 <template>
   <div>
-    <div class="top-right links">
-      <template v-if="authenticated">
-        <router-link :to="{ name: 'home' }">
-          {{ $t('home') }}
-        </router-link>
-      </template>
-      <template v-else>
-        <router-link :to="{ name: 'post.list' }">
-          Post
-        </router-link>
-      </template>
+    <div class="has-text-centered title">
+      <h1>blaysku.com</h1>
     </div>
-
-    <div class="text-center">
-      <div class="title mb-4">
-        {{ title }}
-      </div>
-    </div>
+    <h2 class="subtitle has-text-centered">Welcome</h2>
   </div>
 </template>
 

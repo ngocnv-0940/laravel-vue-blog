@@ -2,12 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MediaResource;
+use App\Http\Resources\NotificationCollection;
+use App\Http\Resources\NotificationResource;
 use App\Http\Resources\UserResource;
+use App\Models\Media;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    private $media;
+    private $user;
+
+    public function __construct(Media $media)
+    {
+        $this->media = $media;
+        $this->user = auth()->user();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -48,7 +62,7 @@ class UserController extends Controller
     public function show(User $user, Request $request)
     {
         $request->validate([
-            'scope' => 'string|nullable'
+            'scope' => 'string|nullable',
         ]);
 
         $posts = $user->posts()->with(['author', 'category', 'tags']);
@@ -62,7 +76,7 @@ class UserController extends Controller
 
         return [
             'posts' => $posts->latest()->paginate(),
-            'user' => new UserResource($user)
+            'user' => new UserResource($user),
         ];
     }
 
@@ -98,5 +112,30 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    public function uploadImage(Request $request)
+    {
+        abort_unless(auth()->check(), 403);
+        $request->validate([
+            'uploads' => 'required|array',
+            'uploads.*' => 'image',
+        ]);
+        try {
+            DB::beginTransaction();
+            foreach ($request->uploads as $upload) {
+                $uploaded[]['url'] = $this->media->upload($upload, 'user');
+            }
+            $this->user->media()->createMany($uploaded);
+            DB::commit();
+            return $uploaded;
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+    }
+
+    public function media(User $user)
+    {
+        return MediaResource::collection($user->media()->latest()->paginate(12));
     }
 }

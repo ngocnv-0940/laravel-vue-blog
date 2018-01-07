@@ -1,6 +1,27 @@
 <template>
-  <div class="box">
-    <article class="media" v-for="(comment, index) in comments" :key="comment.id">
+  <div class="box" id="comment">
+    <article class="media" v-if="authCheck">
+      <figure class="media-left">
+        <p class="image is-64x64">
+          <img src="http://bulma.io/images/placeholders/128x128.png">
+        </p>
+      </figure>
+      <div class="media-content">
+        <div class="field">
+          <p class="control">
+            <textarea class="textarea"
+              placeholder="Nhập bình luận, Ctrl + Enter để gửi..."
+              :class="{ 'is-danger': form.errors.has('message') && !form.parent_id }"
+              rows="2"
+              @keyup.ctrl.enter.prevent="sendComment($event, true)">
+            </textarea>
+          </p>
+          <p v-if="form.errors.has('message') && !form.parent_id" class="help is-danger">{{ form.errors.get('message') }}</p>
+        </div>
+      </div>
+    </article>
+    <article class="media" v-else>Vui lòng đăng nhập để bình luận!</article>
+    <article class="media" v-for="(comment, index) in comments" :key="comment.id" :id="'comment-' + comment.id">
       <figure class="media-left">
         <p class="image is-64x64">
           <img src="http://bulma.io/images/placeholders/128x128.png">
@@ -27,7 +48,7 @@
           </p>
         </div>
 
-        <article class="media" v-for="(child, index) in comment.childs" :key="child.id">
+        <article class="media" v-for="(child, index) in comment.childs" :key="child.id" :id="'comment-' + child.id">
           <figure class="media-left">
             <p class="image is-48x48">
               <img src="http://bulma.io/images/placeholders/96x96.png">
@@ -85,28 +106,6 @@
     </article>
 
     <a class="has-text-centered has-text-primary" v-if="!is_last_page" @click="fetchComments({})">Xem thêm bình luận</a>
-
-    <article class="media" v-if="authCheck">
-      <figure class="media-left">
-        <p class="image is-64x64">
-          <img src="http://bulma.io/images/placeholders/128x128.png">
-        </p>
-      </figure>
-      <div class="media-content">
-        <div class="field">
-          <p class="control">
-            <textarea class="textarea"
-              placeholder="Nhập bình luận..."
-              :class="{ 'is-danger': form.errors.has('message') && !form.parent_id }"
-              rows="2"
-              @keyup.ctrl.enter.prevent="sendComment($event, true)">
-            </textarea>
-          </p>
-          <p v-if="form.errors.has('message') && !form.parent_id" class="help is-danger">{{ form.errors.get('message') }}</p>
-        </div>
-      </div>
-    </article>
-
   </div>
 </template>
 <script>
@@ -127,7 +126,6 @@
     computed: {
       ...mapGetters(['authCheck', 'authUser']),
       ...mapState('comment', ['comments', 'is_last_page', 'loading'])
-
     },
     methods: {
       ...mapActions('article', ['updateArticle']),
@@ -153,12 +151,30 @@
       },
       hasLike(comment) {
         return this.authCheck ? comment.likes.some(like => like.user_id == this.authUser.id) : false
+      },
+      scrollToHash() {
+        const hash = this.$route.hash
+        if (!hash) return
+        let element = $(hash)
+        if (!element.length) return
+        let padding = + element.css('padding-top').replace('px', '')
+        let height = $('.navbar-menu').height()
+
+        $('html').animate({
+          scrollTop: element.offset().top - height - padding,
+        })
       }
     },
     watch: {
       data() {
         this.comments = this.data
+      },
+      $route() {
+        setTimeout(this.scrollToHash, 500)
       }
+    },
+    mounted() {
+      setTimeout(this.scrollToHash, 1000)
     }
   }
 </script>

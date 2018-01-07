@@ -13,6 +13,7 @@
         <b-dropdown-item has-link v-for="child in category.childs" :key="child.slug" :value="child">
           <router-link :to="{ name: 'post.category', params: { slug: child.slug }}">
             {{ child.name }}
+                <b-tag rounded>{{ child.posts_count }}</b-tag>
           </router-link>
         </b-dropdown-item>
       </b-dropdown>

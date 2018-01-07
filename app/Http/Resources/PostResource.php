@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Media;
 use Illuminate\Http\Resources\Json\Resource;
 
 class PostResource extends Resource
@@ -23,6 +24,7 @@ class PostResource extends Resource
             'meta_keywords' => $this->meta_keywords,
             'content' => $this->content,
             'image' => $this->image,
+            'thumb' => $this->thumb,
             'featured' => (boolean) $this->featured,
             'is_public' => (boolean) $this->is_public,
             'comments_count' => $this->comments_count,

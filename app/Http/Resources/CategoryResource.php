@@ -21,7 +21,7 @@ class CategoryResource extends Resource
             'posts' => PostResource::collection($this->whenLoaded('posts')),
             'parent' => $this->when($this->parent_id, new CategoryResource($this->whenLoaded('parent'))),
             'childs' => $this->collection($this->whenLoaded('childs')),
-            'post_count' => $this->when($this->posts_count, $this->posts_count)
+            'posts_count' => $this->when($this->posts_count, $this->posts_count),
         ];
     }
 }

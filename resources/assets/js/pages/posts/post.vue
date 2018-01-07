@@ -2,7 +2,7 @@
   <article class="media">
     <figure class="media-left is-hidden-mobile">
       <p class="image is-128x128">
-        <img :src="post.image">
+        <img :src="post.thumb" :alt="post.title">
       </p>
     </figure>
     <div class="media-content">
@@ -41,12 +41,12 @@
             <span class="icon icon-small"><i class="fa fa-eye"></i></span>
             <small>10</small>
           </a>
-          <a class="level-item">
+          <router-link :to="{ name: 'post.show', params: { slug: post.slug }, hash: '#comment'}" class="level-item">
             <span class="icon icon-small"><i class="fa fa-comments"></i></span>
             <small>{{ post.comments_count }}</small>
-          </a>
+          </router-link>
           <a class="level-item">
-            <span class="icon is-small"><i class="fa fa-heart"></i></span>
+            <span class="icon is-small"><i class="fa fa-heart"></i></span> &nbsp;
             <small>{{ post.likes_count }}</small>
           </a>
         </div>

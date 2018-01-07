@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 Route::resource('user', 'UserController');
-Route::patch('post/status', 'PostController@changeStatus')->name('post.status');
+Route::patch('post/status/{post?}', 'PostController@changeStatus')->name('post.status');
 Route::resource('post', 'PostController');
 Route::resource('category', 'CategoryController');
 Route::resource('tag', 'TagController');
@@ -22,6 +22,14 @@ Route::patch('like/{slug}/toggle', 'LikeController@likeOrUnlike')->name('like.to
 Route::resource('like', 'LikeController');
 
 Route::group(['middleware' => 'auth:api'], function () {
+    Route::post('upload', 'UserController@uploadImage')->name('user.upload');
+    Route::get('user/{user}/media', 'UserController@media')->name('user.media');
+
+    Route::get('notifications', 'NotificationController@notifications')->name('notifications');
+    Route::patch('notifications/read', 'NotificationController@markAsRead')->name('notifications.read');
+    Route::patch('notifications/read-all', 'NotificationController@markAllAsRead')->name('notifications.read-all');
+    Route::delete('notifications/del-all', 'NotificationController@deleteAll')->name('notifications.del-all');
+
     Route::post('logout', 'Auth\LoginController@logout');
 
     Route::get('/user', function (Request $request) {

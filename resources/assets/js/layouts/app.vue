@@ -1,6 +1,7 @@
 <template>
   <div>
     <site-header/>
+    <site-hero/>
     <section class="section">
       <transition name="slide-fade">
         <child/>
@@ -11,15 +12,17 @@
 </template>
 
 <script>
-import SiteHeader from './app/Header.vue'
-import SiteFooter from './app/Footer.vue'
+import SiteHeader from './app/Header'
+import SiteFooter from './app/Footer'
+import SiteHero from './app/Hero'
 
 export default {
   name: 'app-layout',
 
   components: {
     SiteHeader,
-    SiteFooter
+    SiteFooter,
+    SiteHero
   }
 }
 </script>

@@ -13,20 +13,24 @@ if (mix.inProduction()) {
   mix.version()
 
   mix.extract([
-    'vue',
-    'vform',
     'axios',
-    'vuex',
+    'buefy',
+    'highlight.js',
     'jquery',
+    'js-cookie',
+    'laravel-echo',
     'lodash',
-    'popper.js',
+    'marked',
+    'pusher-js',
+    'vform',
+    'vue',
     'vue-i18n',
     'vue-meta',
-    'js-cookie',
     'vue-router',
+    'vue-simplemde',
+    'vue-timeago',
+    'vuex',
     'vuex-router-sync',
-    'buefy',
-    'marked'
   ])
 }
 
@@ -37,7 +41,7 @@ mix.webpackConfig({
       $: 'jquery',
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
-      Popper: ['popper.js', 'default'],
+      // Popper: ['popper.js', 'default'],
       _: 'lodash'
     })
   ],

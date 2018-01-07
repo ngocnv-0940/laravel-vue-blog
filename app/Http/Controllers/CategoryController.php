@@ -18,7 +18,9 @@ class CategoryController extends Controller
     public function index()
     {
         return CategoryResource::collection(
-            Category::has('childs')->with('childs')->get()
+            Category::has('childs')->with(['childs' => function ($query) {
+                $query->withCount('posts');
+            }])->get()
         );
     }
 
@@ -49,8 +51,9 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show($slug)
     {
+        $category = Category::withCount('posts')->whereSlug($slug)->firstOrFail();
         $posts = $category->posts()->with(['author', 'tags', 'category'])->latest()->paginate();
 
         return [
