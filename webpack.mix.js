@@ -50,5 +50,5 @@ mix.webpackConfig({
       '~': path.join(__dirname, './resources/assets/js')
     }
   },
-  // output: { filename: '[name].js', chunkFilename: 'js/[name].app.js', publicPath: '/' }
+  output: { filename: '[name].js', chunkFilename: 'js/[name].app.js', publicPath: '/' }
 })
