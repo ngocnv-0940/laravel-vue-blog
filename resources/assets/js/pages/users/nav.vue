@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-brand">
+  <div class="navbar-tabs">
     <router-link
       :to="{ name: 'user.show', params: { username: $route.params.username }}"
       class="navbar-item is-tab">

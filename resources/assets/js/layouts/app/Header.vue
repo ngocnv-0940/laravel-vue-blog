@@ -7,9 +7,12 @@
           <img v-if="light" src="/uploads/images/doraemon.png" alt="BLAYSKU">
           <img v-else src="/uploads/images/doraemon.png" alt="BLAYSKU">
         </router-link>
-        <a class="navbar-item" href="" target="_blank" title="Github">
-          <b-icon pack="fa" icon="github"></b-icon>
-        </a>
+<!--         <router-link :to="{ name: 'post.create' }" class="navbar-item" v-if="authenticated && isMenuActive"
+          :class="light ? 'is-light' : 'is-primary'">
+          <span class="icon">
+            <b-icon icon="pencil"></b-icon>
+          </span>
+        </router-link> -->
         <span class="navbar-burger burger"
           :class="{ 'is-active': isMenuActive }"
           @click="isMenuActive = !isMenuActive">
@@ -21,7 +24,7 @@
       <div class="navbar-menu" :class="{ 'is-active': isMenuActive }">
         <div class="navbar-start">
           <router-link :to="{ name: 'post.list' }" class="navbar-item">Tin tức</router-link>
-          <div class="navbar-item has-dropdown is-hoverable is-mega">
+          <div class="navbar-item has-dropdown is-hoverable is-mega" v-show="!isMenuActive">
             <div class="navbar-link" :class="{ 'is-active': $route.name == 'post.category' }">
               Chuyên mục
             </div>
@@ -74,6 +77,7 @@
             <b-field>
               <b-input placeholder="Tìm kiếm..."
                 type="search"
+                size="is-rounded"
                 @input.native.once="chualam"
                 icon="search">
               </b-input>
@@ -98,7 +102,7 @@
                 <router-link :to="{ name: 'user.show', params: { username: user.username }}" exact class="navbar-item">Trang cá nhân</router-link>
                 <a class="navbar-item" @click.prevent="logout">Đăng xuất</a>
                 <hr class="navbar-divider">
-                <strong class="navbar-item has-text-grey">NgocBlog beta1</strong>
+                <strong class="navbar-item has-text-grey">NgocBlog 0.1</strong>
               </div>
             </div>
           </template>

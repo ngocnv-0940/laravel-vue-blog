@@ -60,6 +60,10 @@ $container-offset: 140px;
       text-overflow: ellipsis;
     }
   }
+  .right-sidebar {
+    border-left: 1px solid rgba($border, 0.5);
+    padding-left: 1em;
+  }
 }
 
 [v-cloak] {
@@ -100,15 +104,13 @@ $container-offset: 140px;
 }
 
 .right-sidebar {
-  border-left: 1px solid rgba($border, 0.5);
-  padding-left: 1em;
   // min-width: 16rem;
   margin-right: 3rem;
   padding-right: 1rem;
   position: sticky;
   top: 4.5rem;
-  // overflow: auto;
-  max-height: calc(100vh - 6rem);
+  overflow: auto;
+  // max-height: calc(100vh - 6rem);
   .menu-list a {
       display: flex;
       .menu-text {

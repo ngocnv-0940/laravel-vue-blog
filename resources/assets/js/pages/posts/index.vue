@@ -16,7 +16,7 @@
           <p class="has-text-centered subtitle" v-else>Chưa có nội dung, hãy <router-link :to="{ name: 'post.create' }">đăng bài đầu tiên</router-link>!</p>
         </template>
       </div>
-      <div class="column">
+      <div class="column is-hidden-mobile">
         <section class="right-sidebar">
           <h2 class="subtitle">Tag phổ biến</h2>
           <b-field grouped group-multiline>

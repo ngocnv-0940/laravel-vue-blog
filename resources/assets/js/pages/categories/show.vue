@@ -29,7 +29,7 @@
               <div class="content">
                 <p>
                   <strong>{{ category.name }}</strong><br>
-                  <small>@{{ category.username }}</small>
+                  <small>hello</small>
                 </p>
               </div>
             </div>

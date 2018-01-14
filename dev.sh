@@ -1,7 +1,7 @@
-git pull
+git fetch
 CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 git reset --hard origin/$CURRENT_BRANCH
-git pull
+# git pull
 
 composer install
 
@@ -10,4 +10,3 @@ php artisan config:clear
 
 npm i
 npm run hot
-

@@ -50,7 +50,7 @@
             <small>{{ post.likes_count }}</small>
           </a>
         </div>
-        <div class="level-right">
+<!--         <div class="level-right">
           <a class="level-item">
             <b-tooltip label="Reply">
               <span class="icon is-small"><i class="fa fa-reply"></i></span>
@@ -66,7 +66,7 @@
               <span class="icon is-small"><i class="fa fa-link"></i></span>
             </b-tooltip>
           </a>
-        </div>
+        </div> -->
       </nav>
     </div>
     <div class="media-right is-hidden-touch">

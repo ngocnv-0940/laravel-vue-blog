@@ -7,7 +7,7 @@
           {{ post.title }}
         </h1>
         <p class="content">{{ post.excerpt }}</p>
-        <nav class="level">
+        <nav class="level is-full-tablet">
           <div class="level-left" v-if="post.slug">
             <router-link :to="{ name: 'post.category', params: { slug: post.category.slug }}" class="level-item">
               <span class="icon icon-small"><i class="fa fa-folder"></i></span>
@@ -42,11 +42,6 @@
             <a class="level-item">
               <span class="icon is-small"><i class="fa fa-heart"></i></span>
               <small>{{ post.likes_count }}</small>
-            </a>
-            <a class="level-item">
-              <b-tooltip label="Retweet">
-                <span class="icon is-small"><i class="fa fa-retweet"></i></span>
-              </b-tooltip>
             </a>
             <a class="level-item">
               <b-tooltip label="Copy URL">
