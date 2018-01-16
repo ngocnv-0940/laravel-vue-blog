@@ -5,6 +5,7 @@
 /public/js
 /public/css
 /public/fonts
+/public/sitemap.xml
 /public/*.js
 /storage/*.key
 /vendor

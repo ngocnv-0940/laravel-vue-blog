@@ -10,6 +10,12 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group(['prefix' => 'sitemap', 'as' => 'sitemap.'], function () {
+    Route::get('/posts', 'SitemapController@posts')->name('posts');
+    Route::get('/categories', 'SitemapController@categories')->name('categories');
+    Route::get('/tags', 'SitemapController@tags')->name('tags');
+    Route::get('/users', 'SitemapController@users')->name('users');
+});
 
 Route::get('{path}', function () {
     return view('index');
