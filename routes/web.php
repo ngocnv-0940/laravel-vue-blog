@@ -10,6 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/img', 'MediaController@imgFromText')->name('img');
+
 Route::group(['prefix' => 'sitemap', 'as' => 'sitemap.'], function () {
     Route::get('/posts', 'SitemapController@posts')->name('posts');
     Route::get('/categories', 'SitemapController@categories')->name('categories');

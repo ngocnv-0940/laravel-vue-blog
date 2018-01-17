@@ -22,7 +22,7 @@
           <article class="media">
             <figure class="media-left">
               <p class="image is-64x64">
-                <img src="http://bulma.io/images/placeholders/128x128.png">
+                <n-image :t="category.name" fs="20"></n-image>
               </p>
             </figure>
             <div class="media-content">
@@ -51,6 +51,7 @@
 <script>
 import axios from 'axios'
 import Post from '../posts/post'
+import NImage from '~/components/NImage'
 export default {
   metaInfo () {
     return { title: this.category.name || 'Đang tải' }
@@ -104,7 +105,8 @@ export default {
     }
   },
   components: {
-    Post
+    Post,
+    NImage
   }
 }
 </script>
