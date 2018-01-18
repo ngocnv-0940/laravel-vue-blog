@@ -3,7 +3,7 @@
     <article class="media" v-if="authCheck">
       <figure class="media-left">
         <p class="image is-64x64">
-          <img src="http://bulma.io/images/placeholders/128x128.png">
+          <img :src="authUser.avatar" :alt="authUser.name">
         </p>
       </figure>
       <div class="media-content">
@@ -24,7 +24,7 @@
     <article class="media" v-for="(comment, index) in comments" :key="comment.id" :id="'comment-' + comment.id">
       <figure class="media-left">
         <p class="image is-64x64">
-          <img src="http://bulma.io/images/placeholders/128x128.png">
+          <img :src="comment.user.avatar" :alt="comment.user.name">
         </p>
       </figure>
       <div class="media-content">
@@ -51,7 +51,7 @@
         <article class="media" v-for="(child, index) in comment.childs" :key="child.id" :id="'comment-' + child.id">
           <figure class="media-left">
             <p class="image is-48x48">
-              <img src="http://bulma.io/images/placeholders/96x96.png">
+              <img :src="child.user.avatar" :alt="child.user.name">
             </p>
           </figure>
           <div class="media-content">
@@ -84,7 +84,7 @@
         <article class="media" v-if="authCheck && form.parent_id == comment.id">
           <figure class="media-left">
             <p class="image is-48x48">
-              <img src="http://bulma.io/images/placeholders/96x96.png">
+              <img :src="authUser.avatar" :alt="authUser.name">
             </p>
           </figure>
           <div class="media-content">

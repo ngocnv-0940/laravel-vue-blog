@@ -18,8 +18,21 @@
       </div>
       <div class="column">
         <section class="right-sidebar">
-          <h2 class="subtitle">{{ tag.name }}</h2>
-          {{ tag }}
+          <article class="media">
+            <figure class="media-left">
+              <p class="image is-64x64">
+                <n-image :t="tag.name"></n-image>
+              </p>
+            </figure>
+            <div class="media-content">
+              <div class="content">
+                <p>
+                  <strong>{{ tag.name }}</strong><br>
+                  <small>Posts: {{ tag.posts_count }}</small>
+                </p>
+              </div>
+            </div>
+          </article>
         </section>
       </div>
     </div>

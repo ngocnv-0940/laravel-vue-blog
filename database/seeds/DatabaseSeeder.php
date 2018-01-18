@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'ngocnguyencnttk35@gmail.com',
             'is_admin' => true,
             'password' => bcrypt('123123'),
+            'avatar' => route('img', ['t' => 'Nguyen Van Ngoc']),
         ]);
         factory(User::class, 10)->create();
 
@@ -42,7 +43,7 @@ class DatabaseSeeder extends Seeder
             $p->tags()->saveMany(factory(Tag::class, rand(2, 5))->make());
             $p->comments()->saveMany(factory(Comment::class, rand(0, 3))->make())->each(function ($cm) use ($p) {
                 $p->comments()->saveMany(factory(Comment::class, rand(0, 2))->make(['parent_id' => $cm->id]));
-                $cm->likes()->saveMany(factory(Like::class, rand(0,5))->make());
+                $cm->likes()->saveMany(factory(Like::class, rand(0, 5))->make());
             });
 
             $p->likes()->saveMany(factory(Like::class, rand(0, 10))->make());

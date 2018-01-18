@@ -10,7 +10,6 @@ $factory->define(App\Models\Post::class, function (Faker $faker) {
         'slug' => str_slug($title),
         'excerpt' => $faker->text,
         'content' => $faker->text(1000),
-        'image' => $faker->imageUrl(640, 480,'nature'),
         'featured' => rand(0, 1),
     ];
 });

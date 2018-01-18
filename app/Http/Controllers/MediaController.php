@@ -13,7 +13,7 @@ class MediaController extends Controller
         $text = $request->get('t', env('APP_NAME') . "\n" . url('/'));
         $width = (int) ((is_numeric($request->get('w', 100)) && $request->get('w', 100) >= 100) ? $request->get('w', 100) : 100);
         $height = (int) ((is_numeric($request->get('h', 100)) && $request->get('h', 100) >= 100) ? $request->get('h', 100) : 100);
-        $fontSize = (int) ((is_numeric($request->get('fs', 15)) && $request->get('fs', 15) >= 15) ? $request->get('fs', 15) : 15);
+        $fontSize = (int) ((is_numeric($request->get('fs', 20)) && $request->get('fs', 20) >= 15) ? $request->get('fs', 20) : 15);
         $margin = 5;
 
         $image = imagecreatetruecolor($width, $height);
