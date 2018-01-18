@@ -8,4 +8,5 @@ npm run prod
 
 php artisan sitemap:create
 php artisan cache:clear
+php artisan config:clear
 php artisan config:cache

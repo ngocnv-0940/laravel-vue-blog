@@ -132,8 +132,8 @@ export default {
     return {
       title: this.post.title || 'Đang tải',
       meta: [
-        { name: 'keywords', content: this.post.meta_keywords },
-        { name: 'description', content: this.post.meta_description }
+        { vmid: 'keywords', name: 'keywords', content: this.post.tags ? this.post.tags.map(tag => tag.name).join() : ''},
+        { vmid: 'description', name: 'description', content: this.post.excerpt }
       ]
     }
   },

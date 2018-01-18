@@ -52,7 +52,7 @@ class PostController extends Controller
             'title' => 'required|unique:posts,title|max:255',
             'category_id' => 'required|integer|exists:categories,id',
             'content' => 'required|string',
-            'excerpt' => 'string|max:255|nullable',
+            'excerpt' => 'string|max:255',
             'tags' => 'array|nullable',
             'is_public' => 'boolean',
             'image' => 'string|nullable',
