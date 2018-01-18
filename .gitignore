@@ -4,7 +4,7 @@
 /public/uploads/user
 /public/js
 /public/css
-/public/fonts
+/public/fonts/vendor
 /public/sitemap.xml
 /public/*.js
 /storage/*.key
