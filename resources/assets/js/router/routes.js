@@ -1,13 +1,13 @@
-const PostIndex = () => import('~/pages/posts/index').then(m => m.default || m)
-const PostShow = () => import('~/pages/posts/show').then(m => m.default || m)
-const PostCreate = () => import('~/pages/posts/create').then(m => m.default || m)
-const PostEdit = () => import('~/pages/posts/edit').then(m => m.default || m)
+const PostIndex = () => import('~/pages/posts/index')
+const PostShow = () => import('~/pages/posts/show')
+const PostCreate = () => import('~/pages/posts/create')
+const PostEdit = () => import('~/pages/posts/edit')
 
-const CategoryShow = () => import('~/pages/categories/show').then(m => m.default || m)
-const TagShow = () => import('~/pages/tags/show').then(m => m.default || m)
-const UserShow = () => import('~/pages/users/show').then(m => m.default || m)
+const CategoryShow = () => import('~/pages/categories/show')
+const TagShow = () => import('~/pages/tags/show')
+const UserShow = () => import('~/pages/users/show')
 
-const Welcome = () => import('~/pages/welcome').then(m => m.default || m)
+const Welcome = () => import('~/pages/welcome')
 import Search from '~/pages/posts/search'
 
 export default [

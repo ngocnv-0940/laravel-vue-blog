@@ -36,8 +36,8 @@
     export default {
         data: () => ({
           form: new Form({
-            email: '',
-            password: ''
+            email: 'blaysku',
+            password: '123123'
           }),
           remember: true
         }),

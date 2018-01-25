@@ -30,13 +30,13 @@
         </b-field>
         <b-field
             class="content"
-            :type="form.errors.has('content') ? 'is-danger' : null"
-            :message="form.errors.get('content')">
+            :type="form.errors.has('content') || form.errors.has('excerpt') ? 'is-danger' : null"
+            :message="form.errors.has('excerpt') && !form.errors.has('content') ? 'Viết cái gì đi nào tôi ơi' : form.errors.get('content')">
             <markdown-editor
                 :sanitize="true"
                 v-model="form.content"
                 :configs="mdConfig"
-                :class="{ 'error-field': form.errors.has('content') }">
+                :class="{ 'error-field': form.errors.has('content') || form.errors.has('excerpt') }">
             </markdown-editor>
         </b-field>
         <div class="has-text-centered">
