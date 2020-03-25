@@ -1,0 +1,281 @@
+@import "~bulma/sass/utilities/_all";
+@import "~buefy/src/scss/utils/_variables";
+$gap: 120px;
+// Colors
+$twitter: #4099FF;
+$twitter-invert: findColorInvert($twitter);
+$facebook: #4267B2;
+$facebook-invert: findColorInvert($facebook);
+$googleplus: #DB4437;
+$googleplus-invert: findColorInvert($googleplus);
+$primary: #369;
+$primary-invert: findColorInvert($primary);
+$unread: lighten(rgba($primary, .2), 10%);
+
+$laravel: #e74430;
+$vue: #42b983;
+$bulma: #00d1b2;
+
+$colors: (
+  "white": ($white, $black),
+  "black": ($black, $white),
+  "light": ($light, $light-invert),
+  "grey": ($grey, $light-invert),
+  "dark": ($dark, $dark-invert),
+  "primary": ($primary, $primary-invert),
+  "info": ($info, $info-invert),
+  "success": ($success, $success-invert),
+  "warning": ($warning, $warning-invert),
+  "danger": ($danger, $danger-invert),
+  "twitter": ($twitter, $twitter-invert),
+  "facebook": ($facebook, $facebook-invert),
+  "googleplus": ($googleplus, $googleplus-invert)
+);
+
+$link: $primary;
+$link-invert: $primary-invert;
+$link-visited: $grey;
+$link-focus-border: $primary;
+
+$container-offset: 140px;
+
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
+@import "~bulma-badge";
+@import "~highlight.js/styles/atelier-cave-light.css";
+
+
+// Helpers
+@media screen and (min-width: 1024px) {
+  .navbar-noty {
+    width: 25rem;
+    .noti-contents {
+      overflow-y: auto;
+      max-height: 30rem;
+    }
+    .noti-content {
+      white-space: nowrap;
+      max-width: 22.5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .right-sidebar {
+    border-left: 1px solid rgba($border, 0.5);
+    padding-left: 1em;
+  }
+}
+
+[v-cloak] {
+  display: none;
+}
+
+.is-laravel {
+  color: $laravel;
+}
+.is-vue {
+  color: $vue;
+}
+.is-bulma {
+  color: $bulma;
+}
+.navbar-noty {
+  .navbar-divider {
+    margin: 0;
+  }
+  .noti-header {
+    border-bottom: solid 1px #dbdbdb;
+  }
+  .noti-footer {
+    border-top: solid 1px #dbdbdb;
+  }
+  .noti-nothing {
+    margin: 1em 0;
+  }
+}
+
+.is-unread {
+  background-color: $unread;
+  // transition: all 1s ease;
+}
+
+.is-poiter {
+  cursor: pointer;
+}
+
+.right-sidebar {
+  // min-width: 16rem;
+  margin-right: 3rem;
+  padding-right: 1rem;
+  position: sticky;
+  top: 4.5rem;
+  // overflow: auto;
+  // max-height: calc(100vh - 6rem);
+  .menu-list a {
+      display: flex;
+      .menu-text {
+          flex: 1 1 auto;
+      }
+  }
+}
+
+.pagination {
+  margin-top: 1rem;
+}
+
+.content img {
+  display: block;
+  margin: 0 auto;
+}
+
+.modal {
+  z-index: 99;
+}
+
+// .example {
+//   border: 1px solid $warning;
+//   border-top-right-radius: $radius;
+//   color: rgba(0, 0, 0, 0.7);
+//   padding: 1.5rem;
+//   position: relative;
+//   &:not(:first-child) {
+//     margin-top: 2rem;
+//   }
+//   &:not(:last-child) {
+//     margin-bottom: 1.5rem
+//   }
+//   &:before {
+//     background: $warning;
+//     border-radius: $radius $radius 0 0;
+//     bottom: 100%;
+//     content: "Example";
+//     display: inline-block;
+//     font-size: 7px;
+//     font-weight: bold;
+//     left: -1px;
+//     letter-spacing: 1px;
+//     padding: 3px 5px;
+//     position: absolute;
+//     text-transform: uppercase;
+//     vertical-align: top;
+//   }
+//   + .example-code {
+//     border: 1px solid $warning;
+//     border-top: none;
+//     margin-top: -1.5rem;
+//     &:not(:last-child) {
+//       margin-bottom: 1.5rem
+//     }
+//     + .example-code {
+//       border: 1px solid $warning;
+//       border-top: none;
+//       margin-top: -1.5rem;
+//       &:not(:last-child) {
+//         margin-bottom: 1.5rem
+//       }
+//     }
+//   }
+//   &.is-flex {
+//     align-items: center;
+//   }
+// }
+
+// // Generic
+
+// pre {
+//   @include tablet {
+//     white-space: pre-wrap;
+//   }
+//   code {
+//     max-height: 400px;
+//     &.hljs {
+//       background: inherit;
+//       color: inherit;
+//       padding: 1.25rem 1.5rem;
+//     }
+//   }
+// }
+
+::selection {
+  background: lighten($primary, 5%);
+  color: $primary-invert;
+}
+
+// // Home
+
+// .home {
+//   .logo-rounded,
+//   .subtitle,
+//   .npm,
+//   .github-button {
+//     margin-bottom: 1.5rem;
+//   }
+//   .buttons {
+//     margin-bottom: 0.5rem;
+//   }
+//   .logo-rounded {
+//     background: $light;
+//     display: inline-block;
+//     padding: 2.5rem;
+//     border-radius: 32px;
+//     box-shadow: 0 20px 60px rgba(10, 10, 10, 0.05), 0 5px 10px rgba(10, 10, 10, 0.1), 0 1px 1px rgba(10, 10, 10, 0.2);
+//     img {
+//       width: 320px;
+//     }
+//     @include mobile {
+//       padding: 2rem;
+//       img {
+//         width: 220px;
+//       }
+//     }
+//   }
+//   .button + .button {
+//     margin-left: 0.5rem;
+//   }
+//   .npm {
+//     display: inline-flex;
+//     font-size: 1.1em;
+//     color: lighten($primary, 20%);
+//     background: darken($primary, 20%);
+//   }
+// }
+
+// // Temporary fix for https://github.com/jgthms/bulma/issues/837
+// .hero.is-primary .hero-head .navbar {
+//   background: $primary;
+//   color: $primary-invert;
+//   box-shadow: 0 1px 0 rgba($primary-invert, 0.2);
+//   .has-dropdown .navbar-link:after {
+//     border-color: $primary-invert;
+//   }
+//   a.navbar-item {
+//     background: transparent;
+//   }
+//   a.navbar-link {
+//     background: transparent;
+//     color: rgba($primary-invert, 0.7);
+//     &.is-active,
+//     &:hover {
+//       color: $primary-invert;
+//     }
+//   }
+//   .navbar-burger {
+//     background: transparent;
+//     span {
+//       background: $primary-invert;
+//     }
+//     &:hover {
+//       background: darken($primary, 2.5%);
+//     }
+//   }
+//   @include touch {
+//     .has-dropdown .navbar-item {
+//       &:not(.is-active) {
+//         color: rgba($primary-invert, 0.7) !important;
+//       }
+//       &:hover {
+//         color: $primary-invert !important;
+//       }
+//     }
+//   }
+// }
