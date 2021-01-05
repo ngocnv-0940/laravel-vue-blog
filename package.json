@@ -12,7 +12,7 @@
     "clean": "rm -rf public/js/*"
   },
   "dependencies": {
-    "axios": "^0.17.1",
+    "axios": "^0.21.1",
     "buefy": "^0.6.2",
     "bulma-badge": "^0.1.0",
     "font-awesome": "^4.7.0",
